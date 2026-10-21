@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title">
+  <title id="title">Daily Dashboard project cover</title>
+  <rect width="1200" height="750" fill="#F1F1EF"/>
+  <rect x="102" y="72" width="996" height="606" rx="8" fill="#FAFAF9"/>
+  <rect x="140" y="112" width="920" height="46" fill="#FAFAF9"/>
+  <rect x="140" y="194" width="520" height="170" fill="#F1F1EF"/>
+  <rect x="690" y="194" width="370" height="170" fill="#E4E4E2"/>
+  <rect x="140" y="394" width="920" height="60" fill="#F1F1EF"/>
+  <rect x="164" y="416" width="208" height="16" fill="#5F5F5F"/>
+  <rect x="140" y="472" width="920" height="60" fill="#F1F1EF"/>
+  <rect x="164" y="494" width="276" height="16" fill="#5F5F5F"/>
+  <rect x="140" y="550" width="920" height="60" fill="#F1F1EF"/>
+  <rect x="164" y="572" width="236" height="16" fill="#5F5F5F"/>
+</svg>

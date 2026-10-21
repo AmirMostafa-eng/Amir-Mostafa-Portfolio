@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title">
+  <title id="title">Type Study project cover</title>
+  <rect width="1200" height="750" fill="#FAFAF9"/>
+  <rect x="92" y="76" width="1016" height="598" rx="8" fill="#F1F1EF"/>
+  <rect x="132" y="118" width="936" height="58" fill="#FAFAF9"/>
+  <rect x="156" y="210" width="474" height="348" fill="#FAFAF9"/>
+  <rect x="674" y="210" width="370" height="38" fill="#222222"/>
+  <rect x="674" y="278" width="340" height="18" fill="#5F5F5F"/>
+  <rect x="674" y="316" width="352" height="18" fill="#5F5F5F"/>
+  <rect x="674" y="354" width="300" height="18" fill="#5F5F5F"/>
+  <rect x="674" y="420" width="180" height="44" fill="#E4E4E2"/>
+  <rect x="674" y="480" width="230" height="44" fill="#E4E4E2"/>
+  <text x="190" y="422" fill="#222222" font-family="Georgia,serif" font-size="196" letter-spacing="-12">Aa</text>
+</svg>

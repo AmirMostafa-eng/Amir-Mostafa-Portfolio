@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="title">
+  <title id="title">Field Notes project cover</title>
+  <rect width="1200" height="750" fill="#E4E4E2"/>
+  <rect x="120" y="76" width="960" height="598" rx="8" fill="#FAFAF9"/>
+  <rect x="168" y="124" width="232" height="500" fill="#F1F1EF"/>
+  <rect x="202" y="166" width="136" height="18" fill="#5F5F5F"/>
+  <rect x="202" y="220" width="166" height="28" fill="#E4E4E2"/>
+  <rect x="202" y="274" width="148" height="18" fill="#E4E4E2"/>
+  <rect x="450" y="146" width="508" height="32" fill="#222222"/>
+  <rect x="450" y="220" width="548" height="18" fill="#5F5F5F"/>
+  <rect x="450" y="258" width="506" height="18" fill="#5F5F5F"/>
+  <rect x="450" y="334" width="566" height="94" fill="#F1F1EF"/>
+  <rect x="480" y="364" width="406" height="18" fill="#5F5F5F"/>
+  <rect x="450" y="464" width="530" height="18" fill="#E4E4E2"/>
+  <rect x="450" y="504" width="470" height="18" fill="#E4E4E2"/>
+</svg>
