@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
-import { Navbar } from "@/components/layout/Navbar";
+import { LiquidNav } from "@/components/nav/LiquidNav";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -18,7 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${display.variable} ${body.variable}`}>
-        <Navbar />
+        <LiquidNav />
         {children}
         <Footer />
       </body>

@@ -16,6 +16,7 @@ export function Hero() {
           <div className="hero-actions">
             <Button href="/projects">View projects</Button>
             <Button href="/#contact" variant="secondary">Contact me</Button>
+            <Link className="hero-mobile-cv" href={site.cvUrl}>Download CV</Link>
           </div>
           <div className="hero-socials" aria-label="Social profiles">
             <Link className="icon-link" href={site.socials.github} aria-label="GitHub"><FiGithub aria-hidden="true" /></Link>
