@@ -6,3 +6,4 @@ out/
 .superpowers/
 .env.local
 dist/
+.kilo/
