@@ -5,14 +5,19 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        paper: "var(--paper)",
-        surface: "var(--surface)",
-        ink: "var(--ink)",
+        bg: "var(--bg)",
+        "bg-mid": "var(--bg-mid)",
+        "bg-glow": "var(--bg-glow)",
+        text: "var(--text)",
         muted: "var(--muted)",
+        link: "var(--link)",
+        btn: "var(--btn)",
+        "btn-text": "var(--btn-text)",
+        card: "var(--card)",
         line: "var(--line)",
-        accent: "var(--accent)",
-        "accent-hover": "var(--accent-hover)",
-        "accent-tint": "var(--accent-tint)",
+        deep: "var(--deep)",
+        chip: "var(--chip)",
+        warn: "var(--warn)",
       },
       fontFamily: {
         display: ["var(--font-display)", "sans-serif"],
