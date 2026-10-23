@@ -10,6 +10,7 @@
   --muted: #F0D2CE;
   --link: #FFC4BE;
   --btn: #F5E3DC;
+  --btn-hover: #F9EEE9;
   --btn-text: #3A0D14;
   --card: rgb(255 255 255 / 7%);
   --line: rgb(255 255 255 / 16%);
@@ -64,12 +65,18 @@ img { display: block; max-width: 100%; }
 .nav-bead { position: absolute; top: 6px; right: auto; bottom: 6px; left: 0; display: block; width: 0; border-radius: 9999px; background: var(--btn); opacity: 0; pointer-events: none; transform-origin: center; will-change: transform, width; }
 .nav-bead.is-visible { opacity: 1; }
 .nav-cv { position: relative; z-index: 1; flex: 0 0 auto; }
-.hero-mobile-cv { display: none; }
 .footer-links a, .text-link { transition: color 180ms ease; }
 .button { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: .55rem; padding: .65rem 1.15rem; border: 1px solid transparent; border-radius: 4px; font-weight: 600; font-size: .94rem; line-height: 1.2; transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease; cursor: pointer; }
 .button { text-decoration: none; }
-.button-primary { color: var(--btn-text); background: var(--btn); }
-.button-primary:hover { background: #FFFFFF; }
+.button-primary { background: var(--btn); }
+.button-primary,
+.button-primary:hover,
+.button-primary:focus-visible,
+.button-primary:active { color: var(--btn-text); }
+.hero-mobile-cv { display: none; }
+@media (hover: hover) {
+  .button-primary:hover { background: var(--btn-hover); }
+}
 .button-secondary { background: transparent; border: 1.5px solid var(--btn); color: var(--btn); }
 .button-secondary:hover { background: var(--btn); border-color: var(--btn); color: var(--btn-text); }
 .button-small { min-height: 40px; padding: .55rem .9rem; font-size: .875rem; }
@@ -232,7 +239,7 @@ img { display: block; max-width: 100%; }
   .nav-icon { display: block; width: 16px; height: 16px; flex: 0 0 auto; }
   .nav-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
   .nav-bead { top: 6px; bottom: 6px; }
-  .hero-mobile-cv { display: inline-flex; align-items: center; min-height: 40px; color: var(--link); font-size: .9rem; }
+  .hero-mobile-cv { display: inline-flex; align-items: center; min-height: 40px; font-size: .9rem; }
   .section[id] { scroll-margin-top: 84px; }
   .hero { padding-top: 112px; }
 }
