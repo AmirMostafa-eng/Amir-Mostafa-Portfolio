@@ -27,6 +27,7 @@ export function LiquidNav() {
   const pathname = usePathname();
   const routeProjects = pathname === "/projects" || pathname.startsWith("/projects/");
   const [active, setActive] = useState<ActiveId>(routeProjects ? "projects" : null);
+  const hasActiveLink = active !== null;
   const activeRef = useRef<ActiveId>(routeProjects ? "projects" : null);
   const wrapperRef = useRef<HTMLElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -46,6 +47,32 @@ export function LiquidNav() {
   const lastBoxProgressRef = useRef<number | null>(null);
 
   const setActiveId = useCallback((id: ActiveId) => {
+    if (activeRef.current === id) return;
+
+    const wasActive = activeRef.current !== null;
+    const willBeActive = id !== null;
+
+    if (!wasActive && willBeActive) {
+      const link = itemRefs.current.get(id);
+      if (link) {
+        xRef.current.value = link.offsetLeft;
+        xRef.current.target = link.offsetLeft;
+        xRef.current.velocity = 0;
+        widthRef.current.value = link.offsetWidth;
+        widthRef.current.target = link.offsetWidth;
+        widthRef.current.velocity = 0;
+        if (beadRef.current) {
+          beadRef.current.style.width = `${link.offsetWidth}px`;
+          beadRef.current.style.transform = `translate3d(${link.offsetLeft}px, 0, 0) scale(1, 1)`;
+        }
+      }
+    } else if (wasActive && !willBeActive) {
+      xRef.current.target = xRef.current.value;
+      xRef.current.velocity = 0;
+      widthRef.current.target = widthRef.current.value;
+      widthRef.current.velocity = 0;
+    }
+
     activeRef.current = id;
     setActive(id);
   }, []);
@@ -102,6 +129,25 @@ export function LiquidNav() {
       const scaleY = Math.max(0.8, 1 - stretch * 0.6);
       beadRef.current.style.width = `${Math.max(0, widthRef.current.value)}px`;
       beadRef.current.style.transform = `translate3d(${xRef.current.value}px, 0, 0) scale(${scaleX}, ${scaleY})`;
+    };
+    const updateActiveSection = () => {
+      if (pathname !== "/" || Date.now() < ignoreObserverUntilRef.current) return;
+
+      // Match the center of the observer's existing 45%-50% activation band.
+      const activationY = window.innerHeight * 0.475;
+      let currentId = "hero";
+      let currentTop = Number.NEGATIVE_INFINITY;
+      ["hero", ...navItems.map(({ id }) => id)].forEach((id) => {
+        const section = document.getElementById(id);
+        if (!section) return;
+        const top = section.getBoundingClientRect().top;
+        if (top <= activationY && top > currentTop) {
+          currentId = id;
+          currentTop = top;
+        }
+      });
+
+      setActiveId(currentId === "hero" ? null : currentId as NavItemId);
     };
     const measureViewport = () => {
       const width = wrapper.clientWidth;
@@ -195,8 +241,14 @@ export function LiquidNav() {
     };
     drawInitial();
 
-    const onScroll = () => updateDockTarget();
-    const onResize = () => measureViewport();
+    const onScroll = () => {
+      updateDockTarget();
+      updateActiveSection();
+    };
+    const onResize = () => {
+      measureViewport();
+      updateActiveSection();
+    };
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     motionQuery.addEventListener("change", handleMotionPreference);
@@ -214,15 +266,14 @@ export function LiquidNav() {
 
     let observer: IntersectionObserver | null = null;
     if (pathname === "/" && "IntersectionObserver" in window) {
-      observer = new IntersectionObserver((entries) => {
-        if (Date.now() < ignoreObserverUntilRef.current) return;
-        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible && navItems.some((item) => item.id === visible.target.id)) setActiveId(visible.target.id as NavItemId);
-      }, { rootMargin: "-45% 0px -50% 0px", threshold: [0, 0.1, 0.25, 0.5, 1] });
+      observer = new IntersectionObserver(() => updateActiveSection(), { rootMargin: "-45% 0px -50% 0px", threshold: 0 });
+      const hero = document.getElementById("hero");
+      if (hero) observer.observe(hero);
       navItems.forEach(({ id }) => {
         const target = document.getElementById(id);
         if (target) observer?.observe(target);
       });
+      updateActiveSection();
     }
 
     return () => {
@@ -238,6 +289,7 @@ export function LiquidNav() {
 
   useEffect(() => {
     if (!initializedRef.current) return;
+    if (!active) return;
     measureBead(reducedMotionRef.current);
     if (reducedMotionRef.current) {
       const { width, height } = viewportRef.current;
@@ -278,6 +330,7 @@ export function LiquidNav() {
     if (!hero) return;
 
     event.preventDefault();
+    ignoreObserverUntilRef.current = 0;
     scrollToTarget(hero);
   };
 
@@ -294,7 +347,7 @@ export function LiquidNav() {
         <Link href="/" className="nav-brand" aria-label={`${site.name}, home`} onClick={onLogoClick}>{site.name}</Link>
         <nav aria-label="Main">
           <ul className="nav-list">
-            <li className="nav-bead-item" aria-hidden="true"><span ref={beadRef} className={`nav-bead${active ? " is-visible" : ""}`} /></li>
+            <li className="nav-bead-item" aria-hidden="true"><span ref={beadRef} className={`nav-bead${hasActiveLink ? " is-visible" : ""}`} /></li>
             {navItems.map(({ id, label, icon: Icon }) => {
               const selected = active === id;
               const currentPage = routeProjects && id === "projects";
