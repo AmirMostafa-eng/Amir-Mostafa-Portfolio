@@ -1,8 +1,8 @@
 export const site = {
-  name: "Your Name",
+  name: "Amir Mostafa",
   role: "Front-End Developer",
   tagline: "I build fast, accessible, and polished web interfaces.",
-  email: "you@example.com",
+  email: "amirmostafa119@gmail.com",
   cvUrl: "/cv.pdf",
   socials: { github: "#", linkedin: "#" },
   heroPicture: null as string | null,

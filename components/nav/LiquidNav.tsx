@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { site } from "@/data/site";
 import { CONTAINER_PADDING_X, CONTAINER_PADDING_X_MOBILE } from "@/lib/layout";
+import { scrollToTarget } from "@/lib/scroll";
 import { buildNavPath, getShapeBox } from "./buildNavPath";
 import { BAR_HEIGHT_DESKTOP, DOCK_AT, PILL_TOP, SPRING_BEAD, SPRING_DOCK, STRETCH, UNDOCK_AT } from "./nav-config";
 import { navItems, type NavItemId } from "./nav-items";
@@ -264,7 +265,20 @@ export function LiquidNav() {
     ignoreObserverUntilRef.current = Date.now() + 800;
     setActiveId(id);
     history.pushState(null, "", `/#${id}`);
-    target.scrollIntoView({ behavior: reducedMotionRef.current ? "instant" : "smooth", block: "start" });
+    scrollToTarget(target);
+  };
+
+  const onLogoClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (
+      pathname !== "/" || event.button !== 0 || event.metaKey || event.ctrlKey ||
+      event.shiftKey || event.altKey
+    ) return;
+
+    const hero = document.getElementById("hero");
+    if (!hero) return;
+
+    event.preventDefault();
+    scrollToTarget(hero);
   };
 
   const currentHref = (id: NavItemId) => pathname === "/" ? `#${id}` : id === "projects" ? "/projects" : `/#${id}`;
@@ -277,7 +291,7 @@ export function LiquidNav() {
         <path ref={pathRef} fill="none" stroke="var(--nav-stroke)" strokeWidth="1" />
       </svg>
       <div className="liquid-nav-content">
-        <Link href="/" className="nav-brand" aria-label={`${site.name}, home`}>{site.name}</Link>
+        <Link href="/" className="nav-brand" aria-label={`${site.name}, home`} onClick={onLogoClick}>{site.name}</Link>
         <nav aria-label="Main">
           <ul className="nav-list">
             <li className="nav-bead-item" aria-hidden="true"><span ref={beadRef} className={`nav-bead${active ? " is-visible" : ""}`} /></li>
