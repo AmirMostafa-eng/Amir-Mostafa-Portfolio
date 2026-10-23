@@ -18,6 +18,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="en">
       <body className={`${display.variable} ${body.variable}`}>
+        <noscript>
+          <style>{`.nav-entrance { transform: none !important; } .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }`}</style>
+        </noscript>
         <LiquidNav />
         {children}
         <Footer />

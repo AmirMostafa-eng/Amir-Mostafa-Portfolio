@@ -29,6 +29,8 @@ export function LiquidNav() {
   const [active, setActive] = useState<ActiveId>(routeProjects ? "projects" : null);
   const hasActiveLink = active !== null;
   const activeRef = useRef<ActiveId>(routeProjects ? "projects" : null);
+  const entranceRef = useRef<HTMLDivElement>(null);
+  const entranceTweenRef = useRef<gsap.core.Tween | null>(null);
   const wrapperRef = useRef<HTMLElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
@@ -191,6 +193,13 @@ export function LiquidNav() {
     const handleMotionPreference = () => {
       reducedMotionRef.current = motionQuery.matches;
       if (reducedMotionRef.current) {
+        entranceTweenRef.current?.kill();
+        entranceTweenRef.current = null;
+        if (entranceRef.current) {
+          entranceRef.current.dataset.entered = "true";
+          entranceRef.current.style.removeProperty("will-change");
+          gsap.set(entranceRef.current, { clearProps: "transform" });
+        }
         stop();
         dockRef.current.value = dockRef.current.target;
         dockRef.current.velocity = 0;
@@ -288,6 +297,42 @@ export function LiquidNav() {
   }, [measureBead, pathname, setActiveId]);
 
   useEffect(() => {
+    const entrance = entranceRef.current;
+    if (!entrance) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      entrance.dataset.entered = "true";
+      return;
+    }
+
+    const styles = window.getComputedStyle(entrance);
+    const duration = Number.parseFloat(styles.getPropertyValue("--nav-entrance-duration")) / 1000;
+    const ease = styles.getPropertyValue("--nav-entrance-ease").trim();
+    entranceTweenRef.current = gsap.fromTo(
+      entrance,
+      { y: -window.innerHeight },
+      {
+        y: 0,
+        duration,
+        ease,
+        onStart: () => { entrance.style.willChange = "transform"; },
+        onComplete: () => {
+          entrance.dataset.entered = "true";
+          entrance.style.removeProperty("will-change");
+          gsap.set(entrance, { clearProps: "transform" });
+          entranceTweenRef.current = null;
+        },
+      },
+    );
+
+    return () => {
+      entranceTweenRef.current?.kill();
+      entranceTweenRef.current = null;
+      entrance.style.removeProperty("will-change");
+    };
+  }, []);
+
+  useEffect(() => {
     if (!initializedRef.current) return;
     if (!active) return;
     measureBead(reducedMotionRef.current);
@@ -337,7 +382,8 @@ export function LiquidNav() {
   const currentHref = (id: NavItemId) => pathname === "/" ? `#${id}` : id === "projects" ? "/projects" : `/#${id}`;
 
   return (
-    <header ref={wrapperRef} className="liquid-nav" aria-label="Site navigation">
+    <div ref={entranceRef} className="nav-entrance" data-entered="false">
+      <header ref={wrapperRef} className="liquid-nav" aria-label="Site navigation">
       <span className="nav-fallback-bg" aria-hidden="true" />
       <div ref={glassRef} className="nav-glass" aria-hidden="true" />
       <svg ref={svgRef} className="liquid-nav-shape" aria-hidden="true" focusable="false">
@@ -370,6 +416,7 @@ export function LiquidNav() {
         </nav>
         <Link href={site.cvUrl} className="button button-primary button-small nav-cv">Download CV</Link>
       </div>
-    </header>
+      </header>
+    </div>
   );
 }
