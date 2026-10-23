@@ -17,6 +17,7 @@ import {
   SiNodedotjs,
   SiNpm,
   SiReact,
+  SiRedux,
   SiShadcnui,
   SiTailwindcss,
   SiTypescript,
@@ -35,6 +36,7 @@ export type Skill = {
 
 export const skills: readonly Skill[] = [
   { name: "React", icon: SiReact, color: "#61DAFB", row: 1 },
+  { name: "Redux", icon: SiRedux, color: "#764ABC", colorOnDark: "#9F7BD1", row: 1 },
   { name: "Next.js", icon: SiNextdotjs, color: null, row: 1 },
   { name: "TypeScript", icon: SiTypescript, color: "#3178C6", colorOnDark: "#4D8DD3", row: 1 },
   { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", row: 1 },
