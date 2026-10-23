@@ -4,6 +4,7 @@ import { site } from "@/data/site";
 import { PictureSlot } from "@/components/ui/PictureSlot";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
+import { HeroRole } from "@/components/landing/HeroRole";
 
 export function Hero() {
   return (
@@ -12,7 +13,9 @@ export function Hero() {
         <div className="hero-copy">
           <Reveal from="left" delay={150}><p className="eyebrow">{site.greeting}</p></Reveal>
           <Reveal from="left" delay={230}><h1 id="hero-title">{site.name}</h1></Reveal>
-          <Reveal from="left" delay={310}><p className="hero-role">{site.role}</p></Reveal>
+          <Reveal from="left" delay={310}>
+            <p className="hero-role"><HeroRole roles={site.roles} effect={site.roleEffect} /></p>
+          </Reveal>
           <Reveal from="left" delay={390}><p className="hero-tagline">{site.tagline}</p></Reveal>
           <Reveal from="left" delay={470}>
             <div className="hero-actions">

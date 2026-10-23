@@ -23,6 +23,7 @@
   --project-card-reveal-distance: 32px;
   --reveal-duration: 700ms;
   --reveal-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --shimmer-base: rgba(255, 247, 244, 0.55);
   --nav-entrance-duration: 700ms;
   --nav-entrance-ease: power3.out;
   --chip: rgb(255 255 255 / 12%);
@@ -105,7 +106,29 @@ img { display: block; max-width: 100%; }
 .hero-copy { display: flex; flex-direction: column; align-items: flex-start; justify-content: center; padding: clamp(3.5rem, 8vw, 7rem) clamp(2rem, 5vw, 5.5rem) clamp(3.5rem, 8vw, 7rem) 0; }
 .eyebrow { margin: 0 0 .9rem; color: var(--muted); font-size: 1rem; }
 .hero h1 { max-width: 8ch; margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(4.5rem, 9.4vw, 8.5rem); font-weight: 700; letter-spacing: -.085em; line-height: .88; }
-.hero-role { margin: 1.5rem 0 .4rem; color: var(--text); font-size: 1.15rem; font-weight: 600; }
+.hero-role { min-height: 1.65em; margin: 1.5rem 0 .4rem; color: var(--text); font-size: 1.15rem; font-weight: 600; }
+.hero-role-visible { display: inline-block; white-space: nowrap; }
+.role-caret { display: inline-block; width: 2px; height: .9em; margin-left: .12em; vertical-align: -.05em; background: var(--link); }
+.role-typewriter[data-phase="holding"] .role-caret { animation: role-caret-blink 1s steps(1) infinite; animation-play-state: var(--role-play-state, running); }
+.role-typewriter[data-playing="false"] .role-caret { animation-play-state: paused; }
+.role-rotate-slot { position: relative; height: 1.65em; overflow: hidden; vertical-align: top; line-height: 1.45; }
+.role-rotate-current { display: block; }
+.role-rotate-slot[data-changing="true"] { animation: role-slot-width 450ms var(--reveal-ease) both; animation-play-state: var(--role-play-state, running); }
+.role-rotate-slot[data-changing="true"] .role-rotate-current { position: absolute; top: 0; left: 0; animation: role-out 450ms var(--reveal-ease) both; animation-play-state: var(--role-play-state, running); }
+.role-rotate-next { position: absolute; top: 0; left: 0; animation: role-in 450ms var(--reveal-ease) both; animation-play-state: var(--role-play-state, running); }
+.role-rotate-slot[data-playing="false"], .role-rotate-slot[data-playing="false"] .role-rotate-current, .role-rotate-slot[data-playing="false"] .role-rotate-next { animation-play-state: paused; }
+.role-width-measurements { position: absolute; top: 0; left: 0; visibility: hidden; height: 0; overflow: hidden; }
+.role-width-measurements span { display: inline-block; white-space: nowrap; }
+.role-shimmer { color: transparent; background-color: var(--shimmer-base); background-image: linear-gradient(100deg, transparent 44%, var(--text) 50%, transparent 56%); background-size: 250% 100%; background-position: 100% 0; background-repeat: no-repeat; background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: role-shimmer 2.4s linear infinite; animation-play-state: var(--role-play-state, running); }
+.role-shimmer[data-playing="false"] { animation-play-state: paused; }
+@keyframes role-caret-blink { 50% { opacity: 0; } }
+@keyframes role-out { to { opacity: 0; transform: translateY(-110%); } }
+@keyframes role-in { from { opacity: 0; transform: translateY(110%); } to { opacity: 1; transform: translateY(0); } }
+@keyframes role-slot-width { from { width: var(--role-from-width); } to { width: var(--role-to-width); } }
+@keyframes role-shimmer { from { background-position: 100% 0; } to { background-position: -150% 0; } }
+@media (forced-colors: active) {
+  .role-shimmer { color: CanvasText; background: none; -webkit-text-fill-color: CanvasText; animation: none; }
+}
 .hero-tagline { max-width: 42ch; margin: 0; color: var(--muted); font-size: 1.08rem; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 2rem; }
 .hero-socials { display: flex; align-items: center; gap: .7rem; margin-top: 1.8rem; color: var(--text); }
@@ -272,4 +295,9 @@ img { display: block; max-width: 100%; }
   .nav-bead { transition: none; }
   .nav-entrance { transform: none !important; }
   .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }
+  .role-caret { display: none !important; animation: none !important; }
+  .role-rotate-slot { height: auto; overflow: visible; animation: none !important; }
+  .role-rotate-slot .role-rotate-current { position: static !important; animation: none !important; }
+  .role-rotate-next { display: none !important; animation: none !important; }
+  .role-shimmer { color: var(--text) !important; background: none !important; -webkit-text-fill-color: currentColor !important; animation: none !important; }
 }

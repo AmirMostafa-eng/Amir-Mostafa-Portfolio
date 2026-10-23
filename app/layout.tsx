@@ -10,7 +10,7 @@ const body = Instrument_Sans({ subsets: ["latin"], variable: "--font-body", disp
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://example.com"),
-  title: { default: `${site.name} | ${site.role}`, template: `%s | ${site.name}` },
+  title: { default: `${site.name} | ${site.roles[0]}`, template: `%s | ${site.name}` },
   description: site.tagline,
 };
 
@@ -19,7 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${display.variable} ${body.variable}`}>
         <noscript>
-          <style>{`.nav-entrance { transform: none !important; } .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }`}</style>
+          <style>{`.nav-entrance { transform: none !important; } .reveal { opacity: 1 !important; transform: none !important; transition: none !important; } .role-caret { display: none !important; }`}</style>
         </noscript>
         <LiquidNav />
         {children}
