@@ -14,6 +14,14 @@ import { createSpring, setSpringTarget, springSettled, stepSpring } from "./useS
 type ActiveId = NavItemId | null;
 type Viewport = { width: number; height: number; svgHeight: number; containerPadding: number };
 
+function applyNavShape(path: SVGPathElement | null, glass: HTMLDivElement | null, d: string) {
+  path?.setAttribute("d", d);
+  if (!glass) return;
+  const clipPath = `path("${d}")`;
+  glass.style.setProperty("clip-path", clipPath);
+  glass.style.setProperty("-webkit-clip-path", clipPath);
+}
+
 export function LiquidNav() {
   const pathname = usePathname();
   const routeProjects = pathname === "/projects" || pathname.startsWith("/projects/");
@@ -22,6 +30,7 @@ export function LiquidNav() {
   const wrapperRef = useRef<HTMLElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const glassRef = useRef<HTMLDivElement>(null);
   const beadRef = useRef<HTMLSpanElement>(null);
   const itemRefs = useRef(new Map<NavItemId, HTMLAnchorElement>());
   const initializedRef = useRef(false);
@@ -63,7 +72,8 @@ export function LiquidNav() {
     const wrapper = wrapperRef.current;
     const svg = svgRef.current;
     const path = pathRef.current;
-    if (!wrapper || !svg || !path) return;
+    const glass = glassRef.current;
+    if (!wrapper || !svg || !path || !glass) return;
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     reducedMotionRef.current = motionQuery.matches;
@@ -81,7 +91,8 @@ export function LiquidNav() {
     const renderPath = (forceBox = false) => {
       const { width, height } = viewportRef.current;
       writeBox(forceBox);
-      path.setAttribute("d", buildNavPath({ width, height, dockProgress: dockRef.current.value, containerPadding: viewportRef.current.containerPadding }));
+      const d = buildNavPath({ width, height, dockProgress: dockRef.current.value, containerPadding: viewportRef.current.containerPadding });
+      applyNavShape(path, glass, d);
     };
     const renderBead = (velocity = 0) => {
       if (!beadRef.current) return;
@@ -170,7 +181,7 @@ export function LiquidNav() {
         dockRef.current.velocity = 0;
         renderPath(true);
         measureBead(false);
-      } else renderPath();
+      } else if (wasDockMoving) renderPath();
       renderBead(velocity);
       if (dockNowSettled && springSettled(xRef.current) && springSettled(widthRef.current)) {
         xRef.current.value = xRef.current.target;
@@ -229,7 +240,8 @@ export function LiquidNav() {
     measureBead(reducedMotionRef.current);
     if (reducedMotionRef.current) {
       const { width, height } = viewportRef.current;
-      pathRef.current?.setAttribute("d", buildNavPath({ width, height, dockProgress: dockRef.current.target, containerPadding: viewportRef.current.containerPadding }));
+      const d = buildNavPath({ width, height, dockProgress: dockRef.current.target, containerPadding: viewportRef.current.containerPadding });
+      applyNavShape(pathRef.current, glassRef.current, d);
       if (beadRef.current) {
         beadRef.current.style.width = `${Math.max(0, widthRef.current.value)}px`;
         beadRef.current.style.transform = `translate3d(${xRef.current.value}px, 0, 0) scale(1, 1)`;
@@ -260,8 +272,9 @@ export function LiquidNav() {
   return (
     <header ref={wrapperRef} className="liquid-nav" aria-label="Site navigation">
       <span className="nav-fallback-bg" aria-hidden="true" />
+      <div ref={glassRef} className="nav-glass" aria-hidden="true" />
       <svg ref={svgRef} className="liquid-nav-shape" aria-hidden="true" focusable="false">
-        <path ref={pathRef} fill="var(--deep)" stroke="var(--line)" strokeWidth="1" />
+        <path ref={pathRef} fill="none" stroke="var(--nav-stroke)" strokeWidth="1" />
       </svg>
       <div className="liquid-nav-content">
         <Link href="/" className="nav-brand" aria-label={`${site.name}, home`}>{site.name}</Link>
