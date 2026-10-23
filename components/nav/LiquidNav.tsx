@@ -5,12 +5,14 @@ import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { site } from "@/data/site";
-import { buildNavPath } from "./buildNavPath";
-import { BAR_HEIGHT_DESKTOP, BAR_HEIGHT_MOBILE, BEAD_PADDING_X, DOCK_AT, PILL_TOP, SPRING_BEAD, SPRING_DOCK, STRETCH, UNDOCK_AT } from "./nav-config";
+import { CONTAINER_PADDING_X, CONTAINER_PADDING_X_MOBILE } from "@/lib/layout";
+import { buildNavPath, getShapeBox } from "./buildNavPath";
+import { BAR_HEIGHT_DESKTOP, DOCK_AT, PILL_TOP, SPRING_BEAD, SPRING_DOCK, STRETCH, UNDOCK_AT } from "./nav-config";
 import { navItems, type NavItemId } from "./nav-items";
 import { createSpring, setSpringTarget, springSettled, stepSpring } from "./useSpring";
 
 type ActiveId = NavItemId | null;
+type Viewport = { width: number; height: number; svgHeight: number; containerPadding: number };
 
 export function LiquidNav() {
   const pathname = usePathname();
@@ -20,9 +22,8 @@ export function LiquidNav() {
   const wrapperRef = useRef<HTMLElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
   const beadRef = useRef<HTMLSpanElement>(null);
-  const itemRefs = useRef(new Map<NavItemId, HTMLSpanElement>());
+  const itemRefs = useRef(new Map<NavItemId, HTMLAnchorElement>());
   const initializedRef = useRef(false);
   const frameRef = useRef<((time: number, deltaTime: number) => void) | null>(null);
   const tickerRunningRef = useRef(false);
@@ -31,7 +32,8 @@ export function LiquidNav() {
   const widthRef = useRef(createSpring(0, SPRING_BEAD));
   const reducedMotionRef = useRef(false);
   const ignoreObserverUntilRef = useRef(0);
-  const viewportRef = useRef({ width: 0, height: BAR_HEIGHT_DESKTOP });
+  const viewportRef = useRef<Viewport>({ width: 0, height: BAR_HEIGHT_DESKTOP, svgHeight: BAR_HEIGHT_DESKTOP + PILL_TOP, containerPadding: CONTAINER_PADDING_X });
+  const lastBoxProgressRef = useRef<number | null>(null);
 
   const setActiveId = useCallback((id: ActiveId) => {
     activeRef.current = id;
@@ -39,17 +41,14 @@ export function LiquidNav() {
   }, []);
 
   const measureBead = useCallback((instant = false) => {
-    const label = activeRef.current ? itemRefs.current.get(activeRef.current) : null;
-    const content = contentRef.current;
-    if (!label || !content) {
+    const link = activeRef.current ? itemRefs.current.get(activeRef.current) : null;
+    if (!link) {
       setSpringTarget(widthRef.current, 0);
       if (instant) widthRef.current.value = 0;
       return;
     }
-    const labelRect = label.getBoundingClientRect();
-    const contentRect = content.getBoundingClientRect();
-    const targetWidth = labelRect.width + BEAD_PADDING_X * 2;
-    const targetX = labelRect.left - contentRect.left + labelRect.width / 2;
+    const targetX = link.offsetLeft;
+    const targetWidth = link.offsetWidth;
     setSpringTarget(xRef.current, targetX);
     setSpringTarget(widthRef.current, targetWidth);
     if (instant) {
@@ -64,37 +63,48 @@ export function LiquidNav() {
     const wrapper = wrapperRef.current;
     const svg = svgRef.current;
     const path = pathRef.current;
-    const bead = beadRef.current;
-    if (!wrapper || !svg || !path || !bead) return;
+    if (!wrapper || !svg || !path) return;
 
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     reducedMotionRef.current = motionQuery.matches;
     let mounted = true;
-    const measureViewport = () => {
-      const mobile = window.matchMedia("(max-width: 767px)").matches;
-      viewportRef.current = { width: window.innerWidth, height: mobile ? BAR_HEIGHT_MOBILE : BAR_HEIGHT_DESKTOP };
-      svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${viewportRef.current.height + PILL_TOP}`);
-      svg.setAttribute("width", `${window.innerWidth}`);
-      svg.setAttribute("height", `${viewportRef.current.height + PILL_TOP}`);
-      measureBead(reducedMotionRef.current);
-      renderPath();
-      wake();
-    };
-
-    const renderPath = (velocity = 0) => {
-      if (!pathRef.current) return;
+    const writeBox = (force = false) => {
       const { width, height } = viewportRef.current;
-      pathRef.current.setAttribute("d", buildNavPath({ width, height, dockProgress: dockRef.current.value, notchX: 0, notchWidth: 0, velocity }));
+      const progress = dockRef.current.value;
+      if (!force && lastBoxProgressRef.current === progress) return;
+      const box = getShapeBox({ width, height, dockProgress: progress, containerPadding: viewportRef.current.containerPadding });
+      wrapper.style.setProperty("--nav-left", `${box.left}px`);
+      wrapper.style.setProperty("--nav-top", `${box.top}px`);
+      wrapper.style.setProperty("--nav-width", `${box.width}px`);
+      lastBoxProgressRef.current = progress;
+    };
+    const renderPath = (forceBox = false) => {
+      const { width, height } = viewportRef.current;
+      writeBox(forceBox);
+      path.setAttribute("d", buildNavPath({ width, height, dockProgress: dockRef.current.value, containerPadding: viewportRef.current.containerPadding }));
     };
     const renderBead = (velocity = 0) => {
       if (!beadRef.current) return;
       const stretch = Math.min(0.35, Math.abs(velocity) * STRETCH);
       const scaleX = Math.min(1.35, 1 + stretch);
       const scaleY = Math.max(0.8, 1 - stretch * 0.6);
-      beadRef.current.style.transform = `translate3d(${xRef.current.value - widthRef.current.value / 2}px, -50%, 0) scale(${Math.max(0, widthRef.current.value) * scaleX}, ${scaleY})`;
+      beadRef.current.style.width = `${Math.max(0, widthRef.current.value)}px`;
+      beadRef.current.style.transform = `translate3d(${xRef.current.value}px, 0, 0) scale(${scaleX}, ${scaleY})`;
     };
-    const renderContent = () => {
-      if (contentRef.current) contentRef.current.style.transform = `translate3d(-50%, ${PILL_TOP * (1 - dockRef.current.value)}px, 0)`;
+    const measureViewport = () => {
+      const width = wrapper.clientWidth;
+      const svgHeight = wrapper.clientHeight;
+      const height = Math.max(0, svgHeight - PILL_TOP);
+      const containerPadding = window.matchMedia("(max-width: 640px)").matches ? CONTAINER_PADDING_X_MOBILE : CONTAINER_PADDING_X;
+      viewportRef.current = { width, height, svgHeight, containerPadding };
+      svg.setAttribute("viewBox", `0 0 ${width} ${svgHeight}`);
+      svg.setAttribute("width", `${width}`);
+      svg.setAttribute("height", `${svgHeight}`);
+      svg.setAttribute("preserveAspectRatio", "none");
+      renderPath(true);
+      measureBead(reducedMotionRef.current);
+      renderBead();
+      wake();
     };
     function wake() {
       if (reducedMotionRef.current || !frameRef.current || tickerRunningRef.current) return;
@@ -113,8 +123,10 @@ export function LiquidNav() {
       else if (y < UNDOCK_AT && currentTarget !== 0) setSpringTarget(dockRef.current, 0);
       if (reducedMotionRef.current) {
         dockRef.current.value = dockRef.current.target;
-        renderPath();
-        renderContent();
+        dockRef.current.velocity = 0;
+        renderPath(true);
+        measureBead(true);
+        renderBead();
       }
       wake();
     };
@@ -128,8 +140,7 @@ export function LiquidNav() {
         xRef.current.velocity = 0;
         widthRef.current.value = widthRef.current.target;
         widthRef.current.velocity = 0;
-        renderPath();
-        renderContent();
+        renderPath(true);
         renderBead();
       } else wake();
     };
@@ -139,41 +150,54 @@ export function LiquidNav() {
     const drawInitial = () => {
       measureViewport();
       measureBead(true);
-      renderPath();
-      renderContent();
+      renderPath(true);
       renderBead();
       initializedRef.current = true;
       wrapper.setAttribute("data-ready", "true");
     };
+
     frameRef.current = (_time, deltaTime) => {
+      const wasDockMoving = !springSettled(dockRef.current);
       const dt = Math.min(deltaTime / 1000, 0.12);
       const previousX = xRef.current.value;
       stepSpring(dockRef.current, dt);
       stepSpring(xRef.current, dt);
       stepSpring(widthRef.current, dt);
       const velocity = xRef.current.value - previousX;
-      renderPath(velocity);
-      renderContent();
+      const dockNowSettled = springSettled(dockRef.current);
+      if (wasDockMoving && dockNowSettled) {
+        dockRef.current.value = dockRef.current.target;
+        dockRef.current.velocity = 0;
+        renderPath(true);
+        measureBead(false);
+      } else renderPath();
       renderBead(velocity);
-      if (springSettled(dockRef.current) && springSettled(xRef.current) && springSettled(widthRef.current)) stop();
+      if (dockNowSettled && springSettled(xRef.current) && springSettled(widthRef.current)) {
+        xRef.current.value = xRef.current.target;
+        xRef.current.velocity = 0;
+        widthRef.current.value = widthRef.current.target;
+        widthRef.current.velocity = 0;
+        renderBead();
+        stop();
+      }
     };
-    // First draw is synchronous so the SVG replaces the fallback without a flash.
     drawInitial();
 
     const onScroll = () => updateDockTarget();
+    const onResize = () => measureViewport();
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", measureViewport);
+    window.addEventListener("resize", onResize);
     motionQuery.addEventListener("change", handleMotionPreference);
     let resizeObserver: ResizeObserver | null = null;
     if (typeof ResizeObserver !== "undefined") {
-      resizeObserver = new ResizeObserver(() => { measureBead(reducedMotionRef.current); wake(); });
-      if (contentRef.current) resizeObserver.observe(contentRef.current);
-      itemRefs.current.forEach((item) => resizeObserver?.observe(item));
+      resizeObserver = new ResizeObserver(onResize);
+      resizeObserver.observe(wrapper);
     }
     document.fonts?.ready.then(() => {
       if (!mounted) return;
       measureBead(reducedMotionRef.current);
-      wake();
+      if (reducedMotionRef.current) renderBead();
+      else wake();
     });
 
     let observer: IntersectionObserver | null = null;
@@ -192,7 +216,7 @@ export function LiquidNav() {
     return () => {
       mounted = false;
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", measureViewport);
+      window.removeEventListener("resize", onResize);
       motionQuery.removeEventListener("change", handleMotionPreference);
       resizeObserver?.disconnect();
       observer?.disconnect();
@@ -204,9 +228,12 @@ export function LiquidNav() {
     if (!initializedRef.current) return;
     measureBead(reducedMotionRef.current);
     if (reducedMotionRef.current) {
-      const path = pathRef.current;
-      if (path) path.setAttribute("d", buildNavPath({ width: window.innerWidth, height: viewportRef.current.height, dockProgress: dockRef.current.target, notchX: 0, notchWidth: 0, velocity: 0 }));
-      if (beadRef.current) beadRef.current.style.transform = `translate3d(${xRef.current.value - widthRef.current.value / 2}px, -50%, 0) scale(${Math.max(0, widthRef.current.value)}, 1)`;
+      const { width, height } = viewportRef.current;
+      pathRef.current?.setAttribute("d", buildNavPath({ width, height, dockProgress: dockRef.current.target, containerPadding: viewportRef.current.containerPadding }));
+      if (beadRef.current) {
+        beadRef.current.style.width = `${Math.max(0, widthRef.current.value)}px`;
+        beadRef.current.style.transform = `translate3d(${xRef.current.value}px, 0, 0) scale(1, 1)`;
+      }
     } else if (frameRef.current && !tickerRunningRef.current) {
       gsap.ticker.add(frameRef.current);
       tickerRunningRef.current = true;
@@ -236,24 +263,25 @@ export function LiquidNav() {
       <svg ref={svgRef} className="liquid-nav-shape" aria-hidden="true" focusable="false">
         <path ref={pathRef} fill="var(--deep)" stroke="var(--line)" strokeWidth="1" />
       </svg>
-      <div ref={contentRef} className="liquid-nav-content">
-        <span ref={beadRef} className={`nav-bead${active ? " is-visible" : ""}`} aria-hidden="true" />
+      <div className="liquid-nav-content">
         <Link href="/" className="nav-brand" aria-label={`${site.name}, home`}>{site.name}</Link>
         <nav aria-label="Main">
           <ul className="nav-list">
+            <li className="nav-bead-item" aria-hidden="true"><span ref={beadRef} className={`nav-bead${active ? " is-visible" : ""}`} /></li>
             {navItems.map(({ id, label, icon: Icon }) => {
               const selected = active === id;
               const currentPage = routeProjects && id === "projects";
               return (
                 <li key={id}>
                   <Link
+                    ref={(element) => { if (element) itemRefs.current.set(id, element); else itemRefs.current.delete(id); }}
                     className={`nav-item${selected ? " is-active" : ""}`}
                     href={currentHref(id)}
                     aria-current={selected ? (currentPage ? "page" : "true") : undefined}
                     onClick={(event) => onNavClick(id, event)}
                   >
                     <Icon className="nav-icon" aria-hidden="true" />
-                    <span className="nav-label" ref={(element) => { if (element) itemRefs.current.set(id, element); else itemRefs.current.delete(id); }}>{label}</span>
+                    <span className="nav-label">{label}</span>
                   </Link>
                 </li>
               );

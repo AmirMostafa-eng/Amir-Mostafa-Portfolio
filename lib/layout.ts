@@ -1,0 +1,3 @@
+export const CONTAINER_MAX_WIDTH = 1200;
+export const CONTAINER_PADDING_X = 24;
+export const CONTAINER_PADDING_X_MOBILE = 16;
