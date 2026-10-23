@@ -4,16 +4,27 @@ import { ProjectCard } from "@/components/projects/ProjectCard";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
+import { Reveal } from "@/components/ui/Reveal";
 
 export async function FeaturedProjects() {
   const [projects, techs] = await Promise.all([getFeaturedProjects(), getTechs()]);
   return (
     <section className="section" id="projects" aria-labelledby="featured-projects-title">
       <Container>
-        <SectionHeading title="Selected projects" description={site.projectsIntro} id="featured-projects-title" />
+        <Reveal from="up" trigger="view">
+          <div className="featured-projects-heading">
+            <SectionHeading title="Selected projects" description={site.projectsIntro} id="featured-projects-title" />
+          </div>
+        </Reveal>
         {projects.length ? (
           <div className="project-grid">
-            {projects.map((project) => <ProjectCard key={project.slug} project={project} techs={techs} variant="grid" />)}
+            {projects.map((project, index) => (
+              <Reveal key={project.slug} from="up" delay={Math.min(index, 3) * 100} trigger="view">
+                <div className="project-card-reveal">
+                  <ProjectCard project={project} techs={techs} variant="grid" />
+                </div>
+              </Reveal>
+            ))}
           </div>
         ) : <p className="empty-state">Projects will appear here soon.</p>}
         <div className="view-all"><Button href="/projects" variant="secondary">View all projects</Button></div>
