@@ -4,7 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import type { FocusEvent as ReactFocusEvent, PointerEvent as ReactPointerEvent } from "react";
 import { timeline, type TimelineEvent } from "@/data/timeline";
 import { buildRoadPath } from "@/lib/buildTimelineRoad";
-import { ZIGZAG_MIN_WIDTH } from "@/lib/timelineLayout";
+import { ROW_HEIGHT, ZIGZAG_MIN_WIDTH } from "@/lib/timelineLayout";
 
 type Road = { width: number; height: number; path: string };
 type OpenPanel = { id: string; source: "hover" | "focus" | "click" };
@@ -13,14 +13,14 @@ type PanelPosition = { id: string; left: number; top: number };
 const visibleEvents = timeline.filter((event) => event.show);
 const compactLayoutStyles = `
 @container about-timeline (max-width: ${ZIGZAG_MIN_WIDTH - 1}px) {
-  .about-timeline .timeline-event { height: auto; min-height: 180px; padding-left: 56px; --timeline-x: 28px; }
+  .about-timeline .timeline-event { height: auto; min-height: var(--timeline-row-height); padding-left: 56px; --timeline-x: 28px; }
   .about-timeline .timeline-event--right { --timeline-x: 28px; }
   .about-timeline .timeline-label,
   .about-timeline .timeline-event--left .timeline-label,
   .about-timeline .timeline-event--right .timeline-label {
-    position: relative; top: auto; right: auto; left: auto; width: auto; min-height: 180px;
+    position: relative; top: auto; right: auto; left: auto; width: auto; min-height: var(--timeline-row-height); box-sizing: border-box;
     display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
-    padding: 32px 0; transform: none; text-align: left;
+    padding: 8px 0; transform: none; text-align: left;
   }
   .about-timeline .timeline-title { justify-content: flex-start; text-align: left; }
   .about-timeline .timeline-panel { position: relative; width: 100%; max-width: 100%; max-height: none; margin-top: .75rem; }
@@ -84,7 +84,7 @@ export function AboutTimeline() {
     const next = {
       width: root.clientWidth,
       height: root.clientHeight,
-      path: buildRoadPath(points),
+      path: buildRoadPath(points, root.clientWidth, ROW_HEIGHT),
     };
 
     svg.setAttribute("viewBox", `0 0 ${next.width || 1} ${next.height || 1}`);
@@ -114,8 +114,8 @@ export function AboutTimeline() {
     if (!label) return;
     const labelRect = label.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
-    const gap = 12;
     const rootOffsetX = labelRect.left - rootRect.left;
+    const gap = 12;
     const isLeftEvent = title.closest(".timeline-event--left") !== null;
     const desiredLeft = isLeftEvent
       ? titleRect.right - labelRect.left + gap
@@ -125,7 +125,11 @@ export function AboutTimeline() {
     const left = Math.max(minLocalLeft, Math.min(desiredLeft, maxLocalLeft));
 
     const rootOffsetY = labelRect.top - rootRect.top;
-    const desiredTop = titleRect.bottom - labelRect.top + gap;
+    const roomBelowTitle = rootRect.bottom - titleRect.bottom;
+    const shouldOpenUp = panelRect.height + gap > roomBelowTitle;
+    const desiredTop = shouldOpenUp
+      ? titleRect.top - labelRect.top - panelRect.height - gap
+      : titleRect.bottom - labelRect.top + gap;
     const minLocalTop = 12 - rootOffsetY;
     const maxLocalTop = root.clientHeight - panelRect.height - 12 - rootOffsetY;
     const top = Math.max(minLocalTop, Math.min(desiredTop, maxLocalTop));
@@ -221,7 +225,7 @@ export function AboutTimeline() {
   };
 
   return (
-    <div className="about-timeline" ref={rootRef}>
+    <div className="about-timeline" ref={rootRef} style={{ "--timeline-row-height": `${ROW_HEIGHT}px` } as React.CSSProperties}>
       <style>{compactLayoutStyles}</style>
       <svg
         className="timeline-road"

@@ -15,7 +15,7 @@ export const site = {
   heroPicture: null as string | null,
   aboutPicture: null as string | null,
   greeting: "Hello, I'm",
-  about: ["Frontend developer from Egypt building fast, responsive web apps with React, Next.js and TypeScript, and always learning something new."],
+  about: "Frontend developer from Egypt building fast, responsive web apps with React, Next.js and TypeScript, and always learning something new.",
   skillsIntro: "A small toolkit for building thoughtful digital experiences.",
   projectsIntro: "A few selected pieces of work and practice.",
   contactIntro: "Have a project in mind or want to say hello? I’d love to hear from you.",

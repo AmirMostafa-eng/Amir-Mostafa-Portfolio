@@ -12,7 +12,7 @@ export function About() {
           <PictureSlot src={site.aboutPicture} alt="Portrait" className="about-picture" sizes="(max-width: 640px) 100vw, 40vw" />
           <div className="about-copy">
             <SectionHeading title={site.aboutTitle} id="about-title" />
-            {site.about.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
+            {site.about}
             <AboutTimeline />
           </div>
         </div>
