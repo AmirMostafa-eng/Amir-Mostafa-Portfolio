@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type MouseEvent } from "react";
+import { useEffect, useRef,  } from "react";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -12,11 +12,6 @@ import { Container } from "@/components/ui/Container";
 import { Reveal } from "@/components/ui/Reveal";
 import { scrollToTarget } from "@/lib/scroll";
 
-// const sectionLinks = [
-//   { id: "skills", label: "Skills" },
-//   { id: "about", label: "About" },
-//   { id: "projects", label: "Projects" },
-// ] as const;
 
 export function Footer() {
   const pathname = usePathname();
@@ -102,16 +97,6 @@ export function Footer() {
     };
   }, [pathname]);
 
-  // const sectionHref = (id: (typeof sectionLinks)[number]["id"]) => pathname === "/" ? `#${id}` : `/#${id}`;
-
-  // const handleSectionClick = (id: (typeof sectionLinks)[number]["id"], event: MouseEvent<HTMLAnchorElement>) => {
-  //   if (pathname !== "/" || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
-  //   const target = document.getElementById(id);
-  //   if (!target) return;
-  //   event.preventDefault();
-  //   history.pushState(null, "", `/#${id}`);
-  //   scrollToTarget(target);
-  // };
 
   const handleBackToTop = () => {
     if (pathname === "/") {
@@ -127,9 +112,7 @@ export function Footer() {
       <span className="footer-watermark" aria-hidden="true" ref={watermarkRef}>AMIR</span>
       <Container className="footer-container">
         <div className="footer-main">
-          {/* <Reveal from="up" trigger="view" delay={0}>
-            <p className="footer-eyebrow">Contact</p>
-          </Reveal> */}
+          
           <Reveal from="up" trigger="view" delay={80}>
             <h2 className="footer-title">Let’s work together</h2>
           </Reveal>
@@ -162,18 +145,14 @@ export function Footer() {
           </Reveal>
         </div>
 
-        <div className="footer-bottom-row">
-          {/* <div></div> */}
-          <p className="footer-copyright">© {year} {site.name} • All rights reserved.</p>
-          {/* <nav className="footer-section-links" aria-label="Page sections">
-            {sectionLinks.map(({ id, label }) => (
-              <a key={id} href={sectionHref(id)} onClick={(event) => handleSectionClick(id, event)}>{label}</a>
-            ))}
-          </nav> */}
-          <button className="footer-back-top" type="button" aria-label="Back to top" onClick={handleBackToTop}>
-            <FiArrowUp aria-hidden="true" />
-          </button>
-        </div>
+        <Reveal from="up" trigger="view" delay={480}>
+          <div className="footer-bottom-row">
+            <p className="footer-copyright">© {year} {site.name} • All rights reserved.</p>
+            <button className="footer-back-top" type="button" aria-label="Back to top" onClick={handleBackToTop}>
+              <FiArrowUp aria-hidden="true" />
+            </button>
+          </div>
+        </Reveal>
       </Container>
     </footer>
   );
