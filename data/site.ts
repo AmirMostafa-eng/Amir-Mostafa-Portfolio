@@ -2,9 +2,10 @@ export const site = {
   name: "Amir Mostafa",
   roles: [
     "Frontend Developer",
-    "React.js | Next.js Developer",
+    "Web Developer",
+    "React.js | Next Developer",
     "Full Stack MERN Developer",
-    "Software Developer",
+    "Software Engineer",
   ] as const,
   roleEffect: "typewriter" as const,
   tagline: "I build fast, accessible, and polished web interfaces.",

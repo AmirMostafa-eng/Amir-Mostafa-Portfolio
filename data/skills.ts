@@ -15,16 +15,16 @@ import {
   SiMui,
   SiNextdotjs,
   SiNodedotjs,
-  SiNpm,
   SiReact,
   SiRedux,
   SiShadcnui,
   SiTailwindcss,
   SiTypescript,
-  SiVite,
+  // SiNpm,
+  // SiVite,
 } from "react-icons/si";
-import { VscVscode } from "react-icons/vsc";
-import { FlowbiteMark } from "@/components/landing/FlowbiteMark";
+// import { VscVscode } from "react-icons/vsc";
+// import { FlowbiteMark } from "@/components/landing/FlowbiteMark";
 
 export type Skill = {
   name: string;
