@@ -2,6 +2,7 @@ import { site } from "@/data/site";
 import { PictureSlot } from "@/components/ui/PictureSlot";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Container } from "@/components/ui/Container";
+import { AboutTimeline } from "@/components/landing/AboutTimeline";
 
 export function About() {
   return (
@@ -17,6 +18,7 @@ export function About() {
             </dl>
           </div>
         </div>
+        <AboutTimeline />
       </Container>
     </section>
   );
