@@ -46,7 +46,7 @@ export const timeline: readonly TimelineEvent[] = [
     end: null,
     size: "normal",
     detail:
-      "Built the PrufCoach admin dashboard from scratch (German learning platform): banners, users and exams with full CRUD, token-based authentication, and a responsive UI with React.js, Tailwind CSS, Shadcn UI and Axios. Delivered production-ready on schedule, working directly with the client.",
+      "Working with clients as a freelance frontend developer: turning requirements into responsive, cross-browser interfaces and delivering production-ready work on schedule. Tools include React.js, Tailwind CSS, Shadcn UI and Axios, with token-based authentication, REST API integration and full CRUD flows, while keeping up with new tools as projects need them.",
     show: true,
   },
 ];

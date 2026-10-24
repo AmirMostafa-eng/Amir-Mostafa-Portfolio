@@ -4,12 +4,27 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import type { FocusEvent as ReactFocusEvent, PointerEvent as ReactPointerEvent } from "react";
 import { timeline, type TimelineEvent } from "@/data/timeline";
 import { buildRoadPath } from "@/lib/buildTimelineRoad";
+import { ZIGZAG_MIN_WIDTH } from "@/lib/timelineLayout";
 
 type Road = { width: number; height: number; path: string };
 type OpenPanel = { id: string; source: "hover" | "focus" | "click" };
 type PanelPosition = { id: string; left: number; top: number };
 
 const visibleEvents = timeline.filter((event) => event.show);
+const compactLayoutStyles = `
+@container about-timeline (max-width: ${ZIGZAG_MIN_WIDTH - 1}px) {
+  .about-timeline .timeline-event { height: auto; min-height: 180px; padding-left: 56px; --timeline-x: 28px; }
+  .about-timeline .timeline-event--right { --timeline-x: 28px; }
+  .about-timeline .timeline-label,
+  .about-timeline .timeline-event--left .timeline-label,
+  .about-timeline .timeline-event--right .timeline-label {
+    position: relative; top: auto; right: auto; left: auto; width: auto; min-height: 180px;
+    display: flex; flex-direction: column; align-items: flex-start; justify-content: center;
+    padding: 32px 0; transform: none; text-align: left;
+  }
+  .about-timeline .timeline-title { justify-content: flex-start; text-align: left; }
+  .about-timeline .timeline-panel { position: relative; width: 100%; max-width: 100%; max-height: none; margin-top: .75rem; }
+}`;
 
 function formatDate(value: string): string {
   if (!/^\d{4}-\d{2}$/.test(value)) return value;
@@ -36,6 +51,8 @@ function isTimelineTrigger(target: EventTarget | null, eventId: string): boolean
 export function AboutTimeline() {
   const rootRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLOListElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const pathRef = useRef<SVGPathElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const pointerActivationRef = useRef(false);
   const titleRefs = useRef(new Map<string, HTMLButtonElement>());
@@ -47,34 +64,46 @@ export function AboutTimeline() {
   const measureRoad = useCallback(() => {
     const root = rootRef.current;
     const list = listRef.current;
-    if (!root || !list) return;
+    const svg = svgRef.current;
+    const pathElement = pathRef.current;
+    if (!root || !list || !svg || !pathElement) return;
 
+    svg.style.visibility = "hidden";
     const rootRect = root.getBoundingClientRect();
-    const points = Array.from(list.querySelectorAll<HTMLElement>(".timeline-dot")).map((dot) => {
+    const measuredPoints = Array.from(list.querySelectorAll<HTMLElement>(".timeline-dot")).map((dot) => {
       const rect = dot.getBoundingClientRect();
       return {
         x: rect.left + rect.width / 2 - rootRect.left,
         y: rect.top + rect.height / 2 - rootRect.top,
       };
     });
+    const isCompact = root.clientWidth < ZIGZAG_MIN_WIDTH;
+    const points = isCompact && measuredPoints.length > 0
+      ? measuredPoints.map((point) => ({ ...point, x: measuredPoints[0].x }))
+      : measuredPoints;
     const next = {
       width: root.clientWidth,
       height: root.clientHeight,
       path: buildRoadPath(points),
     };
 
+    svg.setAttribute("viewBox", `0 0 ${next.width || 1} ${next.height || 1}`);
+    pathElement.setAttribute("d", next.path);
+    root.dataset.roadReady = "true";
+    root.dataset.layout = isCompact ? "compact" : "zigzag";
+    svg.style.visibility = "visible";
     setRoad((current) =>
       current.width === next.width && current.height === next.height && current.path === next.path ? current : next,
     );
   }, []);
 
   const positionPanel = useCallback(() => {
-    if (!openId || window.matchMedia("(max-width: 640px)").matches) {
+    const root = rootRef.current;
+    if (!openId || !root || root.clientWidth < ZIGZAG_MIN_WIDTH) {
       setPanelPosition(null);
       return;
     }
 
-    const root = rootRef.current;
     const title = titleRefs.current.get(openId);
     const panel = panelRef.current;
     if (!root || !title || !panel || panel.hidden) return;
@@ -86,23 +115,20 @@ export function AboutTimeline() {
     const labelRect = label.getBoundingClientRect();
     const panelRect = panel.getBoundingClientRect();
     const gap = 12;
-
-    let desiredLeft = titleRect.left - labelRect.left - panelRect.width - gap;
-    const minLeft = Math.max(12, 12 - rootRect.left);
-    const maxLeft = Math.min(root.clientWidth - panelRect.width - 12, window.innerWidth - rootRect.left - panelRect.width - 12);
-    const flippedLeft = titleRect.right - labelRect.left + gap;
-    const minLocalLeft = minLeft - (labelRect.left - rootRect.left);
-    const maxLocalLeft = maxLeft - (labelRect.left - rootRect.left);
-    if (desiredLeft < minLocalLeft || desiredLeft > maxLocalLeft) desiredLeft = flippedLeft;
+    const rootOffsetX = labelRect.left - rootRect.left;
+    const isLeftEvent = title.closest(".timeline-event--left") !== null;
+    const desiredLeft = isLeftEvent
+      ? titleRect.right - labelRect.left + gap
+      : titleRect.left - labelRect.left - panelRect.width - gap;
+    const minLocalLeft = 12 - rootOffsetX;
+    const maxLocalLeft = root.clientWidth - panelRect.width - 12 - rootOffsetX;
     const left = Math.max(minLocalLeft, Math.min(desiredLeft, maxLocalLeft));
 
+    const rootOffsetY = labelRect.top - rootRect.top;
     const desiredTop = titleRect.bottom - labelRect.top + gap;
-    const aboveTitle = titleRect.top - labelRect.top - panelRect.height - gap;
-    const minTop = Math.max(12, 12 - rootRect.top);
-    const maxTop = Math.min(root.clientHeight - panelRect.height - 12, window.innerHeight - rootRect.top - panelRect.height - 12);
-    const minLocalTop = minTop - (labelRect.top - rootRect.top);
-    const maxLocalTop = maxTop - (labelRect.top - rootRect.top);
-    const top = Math.max(minLocalTop, Math.min(desiredTop <= maxLocalTop ? desiredTop : aboveTitle, maxLocalTop));
+    const minLocalTop = 12 - rootOffsetY;
+    const maxLocalTop = root.clientHeight - panelRect.height - 12 - rootOffsetY;
+    const top = Math.max(minLocalTop, Math.min(desiredTop, maxLocalTop));
 
     setPanelPosition((current) =>
       current?.id === openId && current.left === left && current.top === top
@@ -196,15 +222,16 @@ export function AboutTimeline() {
 
   return (
     <div className="about-timeline" ref={rootRef}>
-      <h3 className="timeline-heading">My journey</h3>
+      <style>{compactLayoutStyles}</style>
       <svg
         className="timeline-road"
         aria-hidden="true"
         focusable="false"
+        ref={svgRef}
         viewBox={`0 0 ${road.width || 1} ${road.height || 1}`}
         preserveAspectRatio="none"
       >
-        <path d={road.path} />
+        <path d={road.path} ref={pathRef} />
       </svg>
       <ol className="timeline-list" ref={listRef}>
         {visibleEvents.map((event, index) => {

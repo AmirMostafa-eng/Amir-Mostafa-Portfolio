@@ -13,12 +13,9 @@ export function About() {
           <div className="about-copy">
             <SectionHeading title={site.aboutTitle} id="about-title" />
             {site.about.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
-            <dl className="facts">
-              {site.facts.map((fact) => <div className="fact" key={fact.label}><dt>{fact.label}</dt><dd>{fact.value}</dd></div>)}
-            </dl>
+            <AboutTimeline />
           </div>
         </div>
-        <AboutTimeline />
       </Container>
     </section>
   );
