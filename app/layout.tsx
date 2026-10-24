@@ -19,7 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en">
       <body className={`${display.variable} ${body.variable}`}>
         <noscript>
-          <style>{`.nav-entrance { transform: none !important; } .reveal { opacity: 1 !important; transform: none !important; transition: none !important; } .role-caret { display: none !important; }`}</style>
+          <style>{`.nav-entrance { transform: none !important; } .reveal { opacity: 1 !important; transform: none !important; transition: none !important; } .footer-watermark { opacity: 1 !important; transform: translateX(-50%) !important; } .role-caret { display: none !important; }`}</style>
         </noscript>
         <LiquidNav />
         {children}
