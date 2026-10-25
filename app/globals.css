@@ -252,9 +252,9 @@ img { display: block; max-width: 100%; }
 .view-toggle button { display: inline-flex; align-items: center; gap: .45rem; min-height: 36px; padding: .4rem .7rem; border: 0; border-radius: 3px; color: var(--text); background: transparent; cursor: pointer; }
 .view-toggle button[aria-pressed="true"] { color: var(--btn-text); background: var(--btn); }
 .project-list { display: grid; gap: 1.5rem; }
-.project-card-list { display: grid; grid-template-columns: minmax(230px, .38fr) minmax(0, 1fr); align-items: center; gap: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--line); }
-.project-card-list .project-cover { aspect-ratio: 16 / 10; }
-.project-card-list .project-card-content { padding-top: 0; }
+.project-card-list { display: grid; grid-template-columns: minmax(240px, 40%) minmax(0, 1fr); align-items: stretch; gap: 0; overflow: hidden; }
+.project-card-list .project-cover { align-self: stretch; min-height: 200px; aspect-ratio: auto; }
+.project-card-list .project-card-content { min-width: 0; }
 .empty-state { padding: 3rem 0; border-top: 1px solid var(--line); color: var(--muted); }
 .project-detail { padding-bottom: 6rem; }
 .back-link { display: inline-flex; align-items: center; gap: .5rem; margin: 2rem 0; color: var(--link); font-size: .95rem; }
@@ -304,8 +304,6 @@ img { display: block; max-width: 100%; }
   .about-copy { order: 1; }
   .project-grid { grid-template-columns: 1fr; gap: 2rem; }
   .projects-toolbar { align-items: flex-start; flex-direction: column; }
-  .project-card-list { grid-template-columns: 1fr; gap: 1rem; }
-  .project-card-list .project-card-content { padding-top: 0; }
   .screenshot-grid { grid-template-columns: 1fr; }
   .project-detail-header { padding-top: .5rem; }
 }
