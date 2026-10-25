@@ -13,7 +13,7 @@ export type ProjectVideo =
 export type Project = {
   slug: string;
   title: string;
-  summary: string;
+  summary: string; // About 160 characters is the recommended length; cards clamp the display to three lines.
   description: string;
   techs: string[];
   cover: string;
