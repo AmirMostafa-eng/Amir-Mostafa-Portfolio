@@ -142,9 +142,11 @@ export function Footer() {
             <p className="footer-email">{site.email}</p>
           </Reveal>
           <Reveal from="up" trigger="view" delay={400}>
-            <a className="button button-primary footer-cv-button" href={site.cvUrl} data-magnetic>
-              <FiDownload aria-hidden="true" />Download CV
-            </a>
+            <div className="footer-cv-reveal">
+              <a className="button button-primary footer-cv-button" href={site.cvUrl} data-magnetic>
+                <FiDownload aria-hidden="true" />Download CV
+              </a>
+            </div>
           </Reveal>
         </div>
 
