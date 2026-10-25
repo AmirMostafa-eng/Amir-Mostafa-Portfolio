@@ -25,10 +25,9 @@ function applyNavShape(path: SVGPathElement | null, glass: HTMLDivElement | null
 
 export function LiquidNav() {
   const pathname = usePathname();
-  const routeProjects = pathname === "/projects" || pathname.startsWith("/projects/");
-  const [active, setActive] = useState<ActiveId>(routeProjects ? "projects" : null);
-  const hasActiveLink = active !== null;
-  const activeRef = useRef<ActiveId>(routeProjects ? "projects" : null);
+  const [active, setActive] = useState<ActiveId>(null);
+  const hasActiveLink = pathname === "/" && active !== null;
+  const activeRef = useRef<ActiveId>(null);
   const entranceRef = useRef<HTMLDivElement>(null);
   const entranceTweenRef = useRef<gsap.core.Tween | null>(null);
   const wrapperRef = useRef<HTMLElement>(null);
@@ -351,8 +350,8 @@ export function LiquidNav() {
   }, [active, measureBead]);
 
   useEffect(() => {
-    setActiveId(routeProjects ? "projects" : null);
-  }, [pathname, routeProjects, setActiveId]);
+    setActiveId(null);
+  }, [pathname, setActiveId]);
 
   const onNavClick = (id: NavItemId, event: React.MouseEvent<HTMLAnchorElement>) => {
     if (pathname !== "/") return;
@@ -395,15 +394,14 @@ export function LiquidNav() {
           <ul className="nav-list">
             <li className="nav-bead-item" aria-hidden="true"><span ref={beadRef} className={`nav-bead${hasActiveLink ? " is-visible" : ""}`} /></li>
             {navItems.map(({ id, label, icon: Icon }) => {
-              const selected = active === id;
-              const currentPage = routeProjects && id === "projects";
+              const selected = pathname === "/" && active === id;
               return (
                 <li key={id}>
                   <Link
                     ref={(element) => { if (element) itemRefs.current.set(id, element); else itemRefs.current.delete(id); }}
                     className={`nav-item${selected ? " is-active" : ""}`}
                     href={currentHref(id)}
-                    aria-current={selected ? (currentPage ? "page" : "true") : undefined}
+                    aria-current={selected ? "true" : undefined}
                     onClick={(event) => onNavClick(id, event)}
                   >
                     <Icon className="nav-icon" aria-hidden="true" />
