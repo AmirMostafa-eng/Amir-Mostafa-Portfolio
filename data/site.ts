@@ -12,7 +12,7 @@ export const site = {
   email: "amirmostafa119@gmail.com",
   // TODO: Confirm that WhatsApp is on this number.
   whatsappNumber: "201280546430",
-  footerBlurb: "Open to frontend roles and freelance projects. Pick whichever way is easiest for you.",
+  footerBlurb: "Have a product to build or a team that needs a frontend developer? I’m open to roles and freelance projects, so say hello.",
   cvUrl: "/cv.pdf",
   socials: {
     github: "https://github.com/AmirMostafa-eng",

@@ -7,5 +7,5 @@ test("footer contact links and blurb use the approved profile data", () => {
   assert.equal(site.socials.linkedin, "https://www.linkedin.com/in/amir-mostafa-522b29243");
   assert.equal(site.email, "amirmostafa119@gmail.com");
   assert.equal(site.whatsappNumber, "201280546430");
-  assert.equal(site.footerBlurb, "Open to frontend roles and freelance projects. Pick whichever way is easiest for you.");
+  assert.equal(site.footerBlurb, "Have a product to build or a team that needs a frontend developer? I’m open to roles and freelance projects, so say hello.");
 });

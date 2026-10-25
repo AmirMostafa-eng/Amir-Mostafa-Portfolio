@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef,  } from "react";
+import { useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -52,8 +52,9 @@ export function Footer() {
       if (!supportsMagnet) return;
 
       footer.querySelectorAll<HTMLAnchorElement>("[data-magnetic]").forEach((target) => {
-        const quickX = gsap.quickTo(target, "x", { duration: 0.4, ease: "power2.out", overwrite: true });
-        const quickY = gsap.quickTo(target, "y", { duration: 0.4, ease: "power2.out", overwrite: true });
+        const quickX = gsap.quickTo(target, "x", { duration: 0.4, ease: "power2.out", overwrite: "auto" });
+        const quickY = gsap.quickTo(target, "y", { duration: 0.4, ease: "power2.out", overwrite: "auto" });
+        const quickScale = gsap.quickTo(target, "scale", { duration: 0.4, ease: "power2.out", overwrite: "auto" });
         let centerX = 0;
         let centerY = 0;
 
@@ -62,7 +63,7 @@ export function Footer() {
           const bounds = target.getBoundingClientRect();
           centerX = bounds.left + bounds.width / 2;
           centerY = bounds.top + bounds.height / 2;
-          gsap.to(target, { scale: 1.04, duration: 0.4, ease: "power2.out", overwrite: true });
+          quickScale(1.04);
         };
         const onPointerMove = (event: PointerEvent) => {
           if (event.pointerType !== "mouse") return;
@@ -71,7 +72,9 @@ export function Footer() {
         };
         const onPointerLeave = (event: PointerEvent) => {
           if (event.pointerType !== "mouse") return;
-          gsap.to(target, { x: 0, y: 0, scale: 1, duration: 0.5, ease: "power3.out", overwrite: true });
+          quickX(0);
+          quickY(0);
+          quickScale(1);
         };
 
         target.addEventListener("pointerenter", onPointerEnter);
@@ -145,7 +148,7 @@ export function Footer() {
           </Reveal>
         </div>
 
-        <Reveal from="up" trigger="view" delay={480}>
+        <Reveal from="up" trigger="view" delay={450}>
           <div className="footer-bottom-row">
             <p className="footer-copyright">© {year} {site.name} • All rights reserved.</p>
             <button className="footer-back-top" type="button" aria-label="Back to top" onClick={handleBackToTop}>
