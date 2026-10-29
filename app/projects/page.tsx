@@ -14,7 +14,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
   const [projects, techs] = await Promise.all([getProjects(), getTechs()]);
 
   return (
-    <main className="page-main">
+    <main className="page-main pb-28">
       <Container>
         <header className="page-header">
           <h1 className="page-title">Projects</h1>

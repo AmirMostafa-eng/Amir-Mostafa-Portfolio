@@ -37,10 +37,12 @@ export default async function ProjectPage({ params }: PageProps) {
   return (
     <main className="page-main project-detail">
       <Container>
-        <Link className="back-link" href="/projects"><FiArrowLeft aria-hidden="true" /> All projects</Link>
         <header className="project-detail-header">
-          <h1 className="project-title">{project.title}</h1>
-          <p className="project-year">{project.year}</p>
+          <div className="project-detail-title">
+            <Link className="back-link footer-back-top" href="/projects"><FiArrowLeft aria-hidden="true" title="All projects"/></Link>
+            <h1 className="project-title">{project.title}</h1>
+          </div>
+          {/* <p className="project-year">{project.year}</p> */}
           <p className="project-intro">{project.summary}</p>
           {project.links.live || project.links.repo ? (
             <div className="project-actions">
