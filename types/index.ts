@@ -8,7 +8,9 @@ export type Tech = {
 export type ProjectVideo =
   | null
   | { provider: "youtube"; id: string }
-  | { provider: "file"; url: string };
+  | { provider: "file"; url: string }
+  | { provider: "vimeo"; id: string; hash?: string }
+  | { provider: "wistia"; id: string };
 
 export type Project = {
   slug: string;
@@ -17,10 +19,11 @@ export type Project = {
   description: string;
   techs: string[];
   cover: string;
+  poster?: string;
   screenshots?: string[];
   links: { live?: string; repo?: string };
   video: ProjectVideo;
   featured: boolean;
-  year: number;
+  year?: number;
   learned?: string[];
 };

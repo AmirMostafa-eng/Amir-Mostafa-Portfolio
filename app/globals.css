@@ -269,6 +269,15 @@ img { display: block; max-width: 100%; }
 .video-placeholder > img { width: 100%; height: 100%; object-fit: cover; opacity: .48; }
 .video-overlay { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .75rem; color: var(--text); text-align: center; }
 .video-play { display: grid; width: 64px; height: 64px; place-items: center; border: 1px solid var(--line); border-radius: 50%; font-size: 1.4rem; }
+.project-video-frame { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; background: var(--deep); }
+.project-video-poster { object-fit: cover; }
+.project-video-control { position: absolute; inset: 0; display: grid; width: 100%; height: 100%; place-items: center; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.project-video-play-icon { display: grid; width: 64px; height: 64px; place-items: center; border: 1px solid var(--line); border-radius: 50%; background: var(--card); color: var(--text); font-size: 1.4rem; }
+.project-video-control:focus-visible { outline: 2px solid var(--link); outline-offset: -4px; }
+.project-video-player { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+@media (hover: hover) {
+  .project-video-control:hover .project-video-play-icon { background: var(--chip); }
+}
 .detail-section { padding: 3.5rem 0 0; }
 .detail-section h2 { margin: 0 0 1rem; font-family: var(--font-display), sans-serif; font-size: 1.8rem; letter-spacing: -.04em; }
 .detail-prose { max-width: 65ch; color: var(--muted); }
