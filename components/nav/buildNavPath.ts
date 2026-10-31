@@ -2,17 +2,17 @@ import { CONTAINER_MAX_WIDTH, CONTAINER_PADDING_X, CONTAINER_PADDING_X_MOBILE } 
 import { BAR_HEIGHT_DESKTOP, BAR_HEIGHT_MOBILE, DOCKED_CORNER_STYLE, DOCKED_RADIUS, DOCKED_SHOULDER_SIZE, PILL_MAX_WIDTH, PILL_SIDE_MARGIN, PILL_TOP } from "./nav-config";
 
 export type ShapeBox = { left: number; top: number; width: number; height: number };
-export type ShapeBoxOptions = { width: number; height?: number; dockProgress: number; containerPadding?: number };
-export type NavPathOptions = { width: number; height: number; dockProgress: number; containerPadding?: number; notchX?: number; notchWidth?: number; velocity?: number };
+export type ShapeBoxOptions = { width: number; height?: number; dockProgress: number; containerPadding?: number; pillMaxWidth?: number };
+export type NavPathOptions = { width: number; height: number; dockProgress: number; containerPadding?: number; pillMaxWidth?: number; notchX?: number; notchWidth?: number; velocity?: number };
 type Point = readonly [number, number];
 
 /** Layout shared by the path and the foreground nav content. */
-export function getShapeBox({ width, height, dockProgress, containerPadding }: ShapeBoxOptions): ShapeBox {
+export function getShapeBox({ width, height, dockProgress, containerPadding, pillMaxWidth = PILL_MAX_WIDTH }: ShapeBoxOptions): ShapeBox {
   const viewportWidth = Math.max(0, width);
   const progress = Math.min(1, Math.max(0, dockProgress));
   const barHeight = height ?? (viewportWidth < 768 ? BAR_HEIGHT_MOBILE : BAR_HEIGHT_DESKTOP);
   const horizontalPadding = containerPadding ?? (viewportWidth <= 640 ? CONTAINER_PADDING_X_MOBILE : CONTAINER_PADDING_X);
-  const pillWidth = Math.min(PILL_MAX_WIDTH, Math.max(0, viewportWidth - PILL_SIDE_MARGIN * 2));
+  const pillWidth = Math.min(pillMaxWidth, Math.max(0, viewportWidth - PILL_SIDE_MARGIN * 2));
   const pillLeft = (viewportWidth - pillWidth) / 2;
   const dockedWidth = Math.min(CONTAINER_MAX_WIDTH, Math.max(0, viewportWidth - horizontalPadding * 2));
   const dockedLeft = (viewportWidth - dockedWidth) / 2;
@@ -89,12 +89,12 @@ function assertPillSymmetry(points: Point[], box: ShapeBox) {
  * share the measured wrapper coordinate system, so SVG units equal CSS pixels.
  * Notch inputs are reserved for phase 2 and intentionally ignored in phase 1.
  */
-export function buildNavPath({ width, height, dockProgress, containerPadding, notchX: _notchX, notchWidth: _notchWidth, velocity: _velocity }: NavPathOptions): string {
+export function buildNavPath({ width, height, dockProgress, containerPadding, pillMaxWidth, notchX: _notchX, notchWidth: _notchWidth, velocity: _velocity }: NavPathOptions): string {
   void _notchX;
   void _notchWidth;
   void _velocity;
-  const pillBox = getShapeBox({ width, height, dockProgress: 0, containerPadding });
-  const dockBox = getShapeBox({ width, height, dockProgress: 1, containerPadding });
+  const pillBox = getShapeBox({ width, height, dockProgress: 0, containerPadding, pillMaxWidth });
+  const dockBox = getShapeBox({ width, height, dockProgress: 1, containerPadding, pillMaxWidth });
   const pill = pillPoints(pillBox);
   const dock = dockedPoints(dockBox);
   const t = Math.min(1, Math.max(0, dockProgress));

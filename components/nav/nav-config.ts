@@ -1,8 +1,11 @@
 export const DOCK_AT = 80;
 export const UNDOCK_AT = 40;
+export const NAV_COMPACT_MAX_WIDTH = 767.98;
+export const NAV_COMPACT_QUERY = `(max-width: ${NAV_COMPACT_MAX_WIDTH}px)`;
 export const PILL_TOP = 16;
 export const PILL_SIDE_MARGIN = 16;
 export const PILL_MAX_WIDTH = 960;
+export const PILL_MAX_WIDTH_COMPACT = 560;
 export const BAR_HEIGHT_DESKTOP = 60;
 export const BAR_HEIGHT_MOBILE = 68;
 export const DOCKED_RADIUS = 28;

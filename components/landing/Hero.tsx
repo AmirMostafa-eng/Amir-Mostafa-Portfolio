@@ -21,7 +21,7 @@ export function Hero() {
             <div className="hero-actions">
               <Button href="/projects">View projects</Button>
               <Button href="/#contact" variant="secondary">Contact me</Button>
-              <Button href={site.cvUrl} small className="hero-mobile-cv">Download CV</Button>
+              {/* <Button href={site.cvUrl} small className="hero-mobile-cv">Download CV</Button> */}
             </div>
           </Reveal>
           <Reveal from="left" delay={550}>
