@@ -207,13 +207,10 @@ img { display: block; max-width: 100%; }
 .project-card-content { display: flex; min-width: 0; flex: 1; flex-direction: column; padding: 20px; }
 .project-card h3 { display: -webkit-box; min-height: 2.4em; margin: 0; overflow: hidden; color: var(--text); font-family: var(--font-display), sans-serif; font-size: 1.45rem; line-height: 1.2; letter-spacing: -.035em; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 .project-summary { display: -webkit-box; margin: 8px 0 14px; overflow: hidden; color: var(--text); line-height: 1.5; -webkit-box-orient: vertical; -webkit-line-clamp: 3; }
-.project-tech-list { display: flex; max-height: calc(2 * 1.45em); overflow: hidden; flex-wrap: wrap; align-items: baseline; margin-top: auto; margin-right: 0; margin-bottom: 0; margin-left: 0; padding: 0; color: var(--muted); font-family: var(--font-body), sans-serif; font-size: 13px; font-weight: 500; line-height: 1.45; list-style: none; }
-.project-tech-list li { display: inline-flex; max-width: 100%; align-items: baseline; white-space: nowrap; }
-.project-tech-separator::before { display: inline; margin-inline: .5em; content: "·"; }
-.project-tech-more { flex: 0 0 auto; }
-.badge-list { display: flex; flex-wrap: wrap; gap: .5rem; }
-.tech-badge { display: inline-flex; align-items: center; gap: .4rem; width: fit-content; padding: .3rem .55rem; border-radius: 4px; background: var(--chip); color: var(--text); font-size: .78rem; font-weight: 600; line-height: 1.35; }
-.tech-badge svg { color: var(--link); font-size: .9rem; }
+.tech-list { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.project-tech-list { max-height: 60px; overflow: hidden; margin-top: auto; }
+.tech-badge { display: inline-flex; min-height: 26px; align-items: center; padding: 4px 10px; border: 1px solid var(--line); border-radius: 9999px; background: var(--card); color: var(--text); font-family: var(--font-body), sans-serif; font-size: 13px; font-weight: 500; line-height: 16px; white-space: nowrap; }
+.tech-badge-more { color: var(--muted); }
 .view-all { display: flex; justify-content: center; margin-top: 2.75rem; }
 .site-footer { position: relative; display: flex; min-height: clamp(640px, 90svh, 860px); overflow: hidden; box-sizing: border-box; flex-direction: column; padding: clamp(2rem, 5vw, 4rem) 0 1.5rem; border: 0; border-top: 1px solid var(--line); border-radius: 32px 32px 0 0; background: var(--deep); color: var(--text); }
 .footer-container { position: relative; z-index: 1; display: flex; min-height: 100%; flex: 1; flex-direction: column; }

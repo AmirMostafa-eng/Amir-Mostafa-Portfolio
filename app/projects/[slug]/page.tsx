@@ -7,7 +7,7 @@ import { getProjectBySlug, getProjects, getTechBySlug } from "@/lib/projects";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { VideoEmbed } from "@/components/projects/VideoEmbed";
-import { TechBadge } from "@/components/projects/TechBadge";
+import { TechList } from "@/components/projects/TechList";
 
 type PageProps = { params: Promise<{ slug: string }> };
 
@@ -60,9 +60,7 @@ export default async function ProjectPage({ params }: PageProps) {
 
         <section className="detail-section" aria-labelledby="tech-used-title">
           <h2 id="tech-used-title">Tech used</h2>
-          <div className="badge-list">
-            {validTechs.map((tech) => tech ? <TechBadge key={tech.slug} tech={tech} /> : null)}
-          </div>
+          <TechList techs={validTechs} label={`${project.title} technologies`} />
         </section>
 
         {project.screenshots?.length ? (

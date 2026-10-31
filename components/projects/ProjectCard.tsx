@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FiPlay } from "react-icons/fi";
+import { TechList } from "@/components/projects/TechList";
 import type { Project, Tech } from "@/types";
 
 type ProjectCardProps = { project: Project; techs: Tech[]; variant: "grid" | "list" };
@@ -9,8 +10,6 @@ export function ProjectCard({ project, techs, variant }: ProjectCardProps) {
   const projectTechs = project.techs
     .map((slug) => techs.find((tech) => tech.slug === slug))
     .filter((tech): tech is Tech => Boolean(tech));
-  const visibleTechs = projectTechs.slice(0, 4);
-  const remainingTechCount = projectTechs.length - visibleTechs.length;
 
   return (
     <Link className={`project-card${variant === "list" ? " project-card-list" : ""}`} href={`/projects/${project.slug}`}>
@@ -25,20 +24,7 @@ export function ProjectCard({ project, techs, variant }: ProjectCardProps) {
       <div className="project-card-content">
         <h3 className="line-clamp-2">{project.title}</h3>
         <p className="project-summary line-clamp-3">{project.summary}</p>
-        <ul className="project-tech-list" aria-label={`${project.title} technologies`}>
-          {visibleTechs.map((tech, index) => (
-            <li key={tech.slug}>
-              {index > 0 ? <span className="project-tech-separator" aria-hidden="true" /> : null}
-              {tech.name}
-            </li>
-          ))}
-          {remainingTechCount > 0 ? (
-            <li className="project-tech-more">
-              <span className="project-tech-separator" aria-hidden="true" />
-              +{remainingTechCount}<span className="sr-only">and {remainingTechCount} more technologies</span>
-            </li>
-          ) : null}
-        </ul>
+        <TechList techs={projectTechs} label={`${project.title} technologies`} maxItems={4} />
       </div>
     </Link>
   );
