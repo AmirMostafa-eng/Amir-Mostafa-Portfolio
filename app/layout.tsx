@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://example.com"),
   title: { default: `${site.name} | ${site.roles[0]}`, template: `%s | ${site.name}` },
   description: site.tagline,
+  icons: {
+    icon: "/1793398889.png",
+  },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

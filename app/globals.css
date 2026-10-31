@@ -137,7 +137,7 @@ img { display: block; max-width: 100%; }
 .hero-socials { display: flex; align-items: center; gap: .7rem; margin-top: 1.8rem; color: var(--text); }
 .icon-link { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: var(--link); text-decoration: none; transition: color 180ms ease, border-color 180ms ease; }
 .icon-link:hover { color: var(--text); border-color: var(--btn); }
-.picture-slot { position: relative; background: var(--deep); overflow: hidden; }
+.picture-slot { position: relative; background: transparent; overflow: hidden; }
 .hero-picture { min-height: 100%; margin-right: calc((100vw - min(100vw - 3rem, 1200px)) / -2); }
 .hero-picture img, .about-picture img { object-fit: cover; }
 

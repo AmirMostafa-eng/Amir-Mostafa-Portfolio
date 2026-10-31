@@ -36,6 +36,7 @@ export function PictureSlot({
       aria-hidden={src ? undefined : true}
     >
       {src ? <Image src={src} alt={alt} fill sizes={sizes} /> : null}
+      {/* <Image src="/images/Developer Avatar Coding in Chair.png" alt={alt} fill sizes={sizes} /> */}
     </div>
   );
 }

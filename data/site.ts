@@ -19,7 +19,7 @@ export const site = {
     linkedin: "https://www.linkedin.com/in/amir-mostafa-522b29243",
   },
   heroPicture: null as string | null,
-  aboutPicture: null as string | null,
+  aboutPicture: "/images/Developer Avatar Coding in Chair.png" as string | null,
   greeting: "Hello, I'm",
   about: "Frontend developer from Egypt building fast, responsive web apps with React, Next.js and TypeScript, and always learning something new.",
   skillsIntro: "A small toolkit for building thoughtful digital experiences.",

@@ -11,6 +11,7 @@ import { buildNavPath, getShapeBox } from "./buildNavPath";
 import { BAR_HEIGHT_DESKTOP, DOCK_AT, PILL_TOP, SPRING_BEAD, SPRING_DOCK, STRETCH, UNDOCK_AT } from "./nav-config";
 import { navItems, type NavItemId } from "./nav-items";
 import { createSpring, setSpringTarget, springSettled, stepSpring } from "./useSpring";
+import Image from "next/image";
 
 type ActiveId = NavItemId | null;
 type Viewport = { width: number; height: number; svgHeight: number; containerPadding: number };
@@ -389,7 +390,10 @@ export function LiquidNav() {
         <path ref={pathRef} fill="none" stroke="var(--nav-stroke)" strokeWidth="1" />
       </svg>
       <div className="liquid-nav-content">
-        <Link href="/" className="nav-brand" aria-label={`${site.name}, home`} onClick={onLogoClick}>{site.name}</Link>
+        <Link href="/" className="nav-brand" aria-label={`${site.name}, home`} onClick={onLogoClick}>
+          <Image src="/1793400310 (1).png" alt="Profile picture" width={40} height={40} className="nav-logo" />
+          {/* <span className="nav-name">mir Mostafa</span> */}
+        </Link>
         <nav aria-label="Main">
           <ul className="nav-list">
             <li className="nav-bead-item" aria-hidden="true"><span ref={beadRef} className={`nav-bead${hasActiveLink ? " is-visible" : ""}`} /></li>
