@@ -21,9 +21,14 @@ export const site = {
   badge: {
     name: "Amir Mostafa",
     role: "Frontend Developer",
-    skills: "React · Next.js · TypeScript",
-    location: "Egypt",
-    status: "Open to roles and freelance work",
+    summary: "I build fast, responsive web apps with React, Next.js and TypeScript.",
+    fields: [
+      { label: "Based in", value: "Egypt" },
+      { label: "Education", value: "B.Sc. Computer Science, Zagazig University" },
+      { label: "Experience", value: "Freelance frontend developer, ITI intern" },
+      { label: "Status", value: "Open to roles and freelance work" },
+    ],
+    stack: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Firebase"],
     strapText: "Amir Mostafa",
     strapLabel: "FRONTEND DEVELOPER",
   },

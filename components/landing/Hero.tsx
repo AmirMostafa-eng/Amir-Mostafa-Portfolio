@@ -38,7 +38,7 @@ export function Hero() {
           data={site.badge}
           photo={site.heroPicture}
           className="hero-badge-frame"
-          cardWidth={220}
+          cardWidth={236}
           height="100svh"
           flipButton={false}
         />
@@ -46,4 +46,3 @@ export function Hero() {
     </section>
   );
 }
-

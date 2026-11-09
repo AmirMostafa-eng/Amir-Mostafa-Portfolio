@@ -1,120 +1,163 @@
 import Image from "next/image";
+import { useId } from "react";
 
-const SHOW_FRAME = true;
+const SHOW_BARCODE = true;
+const CARD_VIEW_WIDTH = 240;
+const CARD_VIEW_HEIGHT = 360;
+const BORDER_WIDTH = 10.2;
+const INNER_RADIUS = 8.4;
+
+type BadgeField = { label: string; value: string };
 
 type BadgeFacesProps = {
   cardWidth: number;
   name: string;
   role: string;
-  skills: string;
-  location: string;
-  status: string;
+  summary: string;
+  fields: readonly BadgeField[];
+  stack: readonly string[];
   photo: string | null;
 };
 
-export function BadgeFaces({
-  cardWidth,
-  name,
-  role,
-  skills,
-  location,
-  status,
-  photo,
-}: BadgeFacesProps) {
+function roundedRectPath(x: number, y: number, width: number, height: number, radius: number) {
+  return [
+    `M ${x + radius} ${y}`,
+    `H ${x + width - radius}`,
+    `A ${radius} ${radius} 0 0 1 ${x + width} ${y + radius}`,
+    `V ${y + height - radius}`,
+    `A ${radius} ${radius} 0 0 1 ${x + width - radius} ${y + height}`,
+    `H ${x + radius}`,
+    `A ${radius} ${radius} 0 0 1 ${x} ${y + height - radius}`,
+    `V ${y + radius}`,
+    `A ${radius} ${radius} 0 0 1 ${x + radius} ${y}`,
+    "Z",
+  ].join(" ");
+}
+
+function CardBorder() {
+  const id = useId().replaceAll(":", "");
+  const outerPath = roundedRectPath(0.5, 0.5, 239, 359, 18);
+  const innerPath = roundedRectPath(
+    BORDER_WIDTH,
+    BORDER_WIDTH,
+    CARD_VIEW_WIDTH - BORDER_WIDTH * 2,
+    CARD_VIEW_HEIGHT - BORDER_WIDTH * 2,
+    INNER_RADIUS,
+  );
+
+  return (
+    <svg
+      className="lanyard-card-border"
+      aria-hidden="true"
+      viewBox="0 0 240 360"
+      fill="none"
+    >
+      <defs>
+        <linearGradient id={`${id}-finish`} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="var(--deep)" />
+          <stop offset=".43" stopColor="var(--deep)" />
+          <stop offset=".5" stopColor="color-mix(in srgb, var(--deep) 72%, var(--link))" />
+          <stop offset=".57" stopColor="var(--deep)" />
+          <stop offset="1" stopColor="var(--deep)" />
+        </linearGradient>
+      </defs>
+      <path d={`${outerPath} ${innerPath}`} fill={`url(#${id}-finish)`} fillRule="evenodd" />
+      <g stroke="color-mix(in srgb, var(--link) 35%, var(--deep))" opacity=".7">
+        <path d={outerPath} strokeWidth="1" />
+        <path d={innerPath} strokeWidth="1" />
+      </g>
+    </svg>
+  );
+}
+
+function Barcode({ name }: { name: string }) {
+  const bars = Array.from(name).flatMap((character, index) => {
+    const code = character.codePointAt(0) ?? 0;
+    return [
+      { width: 1 + (code % 3), gap: index === 0 ? 0 : 1 },
+      { width: 1 + ((code >> 2) % 3), gap: 1 },
+    ];
+  });
+  let x = 0;
+  const rects = bars.map(({ width, gap }, index) => {
+    x += gap;
+    const rect = <rect key={index} x={x} y="0" width={width} height="18" />;
+    x += width;
+    return rect;
+  });
+
+  return (
+    <div className="lanyard-barcode" aria-hidden="true">
+      <svg viewBox={`0 0 ${x} 18`} preserveAspectRatio="none">{rects}</svg>
+      <span>PORTFOLIO 2026</span>
+    </div>
+  );
+}
+
+export function BadgeFaces({ cardWidth, name, role, summary, fields, stack, photo }: BadgeFacesProps) {
   const scale = cardWidth / 240;
+  const inset = BORDER_WIDTH * scale;
+  const radius = INNER_RADIUS * scale;
 
   return (
     <>
       <div className="lanyard-face lanyard-face-front" aria-hidden="true">
-        <div className="lanyard-portrait">
+        <CardBorder />
+        <div
+          className="lanyard-portrait"
+          style={{ inset, borderRadius: radius }}
+        >
           {photo ? (
             <Image
               src={photo}
               alt="Portrait of Amir Mostafa"
               fill
               priority
-              sizes="(max-width: 767px) 220px, 320px"
+              draggable={false}
+              sizes="(max-width: 767px) 236px, 352px"
+              onDragStart={(event) => event.preventDefault()}
               style={{ objectFit: "cover", objectPosition: "50% 20%", transform: "translateZ(0)" }}
             />
           ) : (
             <span className="lanyard-placeholder-a" style={{ fontSize: cardWidth * 0.34 }}>A</span>
           )}
         </div>
-        {SHOW_FRAME ? <CardFrame /> : null}
       </div>
       <div className="lanyard-face lanyard-face-back" aria-hidden="true">
-        <div className="lanyard-back-copy" style={{ padding: `${31 * scale}px ${18 * scale}px` }}>
-          <strong className="lanyard-card-name" style={{ fontSize: 19 * scale }}>{name}</strong>
-          <span className="lanyard-card-role" style={{ fontSize: 7 * scale }}>{role}</span>
+        <CardBorder />
+        <div
+          className="lanyard-back-panel"
+          style={{
+            inset,
+            borderRadius: radius,
+            padding: `${6 * scale}px ${8 * scale}px ${5 * scale}px`,
+            gap: 3 * scale,
+          }}
+        >
+          <div className="lanyard-back-heading">
+            <strong className="lanyard-card-name" style={{ fontSize: Math.max(19.6, 21 * scale) }}>{name}</strong>
+            <span className="lanyard-card-role" style={{ fontSize: Math.max(9, 9.5 * scale) }}>{role}</span>
+          </div>
           <span className="lanyard-card-rule" />
-          <span className="lanyard-back-detail" style={{ fontSize: 8 * scale }}>{skills}</span>
-          <span className="lanyard-back-detail" style={{ fontSize: 8 * scale }}>{location}</span>
-        </div>
-        <div className="lanyard-status" style={{ minHeight: 55 * scale, padding: `${10 * scale}px ${14 * scale}px`, fontSize: 8 * scale }}>
-          {status}
+          <p className="lanyard-back-summary" style={{ fontSize: Math.max(10.7, 11.5 * scale) }}>{summary}</p>
+          <div className="lanyard-back-fields">
+            {fields.map((field) => (
+              <div className="lanyard-back-field" key={field.label}>
+                <span className="lanyard-back-label" style={{ fontSize: Math.max(9, 9 * scale) }}>{field.label}</span>
+                <span className="lanyard-back-value" style={{ fontSize: Math.max(10.7, 11.5 * scale) }}>{field.value}</span>
+              </div>
+            ))}
+          </div>
+          <div className="lanyard-back-stack" style={{ maxHeight: 38 * scale }}>
+            {stack.map((technology) => (
+              <span className="lanyard-stack-pill" key={technology} style={{ fontSize: Math.max(9, 9.5 * scale) }}>
+                {technology}
+              </span>
+            ))}
+          </div>
+          {SHOW_BARCODE ? <Barcode name={name} /> : null}
         </div>
       </div>
     </>
-  );
-}
-
-function CardFrame() {
-  const ornaments = (strokeWidth: number) => (
-    <>
-      {[{ x: 228, y: 12 }, { x: 12, y: 348 }].map(({ x, y }, index) => (
-        <g key={index} transform={`translate(${x} ${y})`} strokeWidth={strokeWidth}>
-          {[80, 72, 49.6, 20.8].map((radius) => (
-            <circle key={radius} r={radius} />
-          ))}
-          {Array.from({ length: 16 }, (_, petal) => (
-            <ellipse
-              key={`petal-${petal}`}
-              cy={-80 * 0.76}
-              rx={80 * 0.07}
-              ry={80 * 0.13}
-              transform={`rotate(${(petal / 16) * 360})`}
-            />
-          ))}
-          {Array.from({ length: 8 }, (_, petal) => (
-            <path
-              key={`leaf-${petal}`}
-              d="M 0 -20.8 C 9.6 -32 8 -41.6 0 -48 C -8 -41.6 -9.6 -32 0 -20.8 Z"
-              transform={`rotate(${(petal / 8) * 360})`}
-            />
-          ))}
-          {Array.from({ length: 16 }, (_, bead) => (
-            <circle key={`bead-${bead}`} cy={-76} r={1.44} transform={`rotate(${(bead / 16) * 360})`} />
-          ))}
-        </g>
-      ))}
-    </>
-  );
-
-  return (
-    <svg
-      className="lanyard-frame"
-      aria-hidden="true"
-      viewBox="0 0 240 360"
-      fill="none"
-      style={{ color: "var(--btn)" }}
-    >
-      <defs>
-        <clipPath id="lanyard-frame-clip">
-          <rect x="12" y="12" width="216" height="336" rx="14" />
-        </clipPath>
-      </defs>
-      <g clipPath="url(#lanyard-frame-clip)">
-        <g stroke="var(--deep)" strokeWidth="3" opacity=".3">
-          <rect x="12" y="12" width="216" height="336" rx="14" />
-          <rect x="17" y="17" width="206" height="326" rx="10" strokeWidth="1.5" />
-          {ornaments(2.4)}
-        </g>
-        <g stroke="currentColor" opacity=".75">
-          <rect x="12" y="12" width="216" height="336" rx="14" strokeWidth="1.5" />
-          <rect x="17" y="17" width="206" height="326" rx="10" strokeWidth=".75" />
-          {ornaments(1.2)}
-        </g>
-      </g>
-    </svg>
   );
 }

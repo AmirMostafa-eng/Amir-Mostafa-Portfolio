@@ -16,9 +16,9 @@ const MATERIALS = {
 type BadgeData = {
   name: string;
   role: string;
-  skills: string;
-  location: string;
-  status: string;
+  summary: string;
+  fields: readonly { label: string; value: string }[];
+  stack: readonly string[];
   strapText: string;
   strapLabel: string;
 };
@@ -167,13 +167,13 @@ function roundedRect(
 }
 
 function measuredCardWidth(width: number) {
-  return Math.max(200, Math.min(320, Math.round(width * 0.52)));
+  return Math.max(224, Math.min(352, Math.round(width * 0.58)));
 }
 
 export function LanyardBadge({
   data,
   photo,
-  cardWidth = 220,
+  cardWidth = 236,
   height = "calc(100svh - 76px)",
   className = "",
   flipButton = false,
@@ -185,6 +185,7 @@ export function LanyardBadge({
   const rootRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const assemblyRef = useRef<HTMLDivElement>(null);
+  const clipRef = useRef<HTMLDivElement>(null);
   const spinRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const flipRef = useRef<() => void>(() => {});
@@ -218,8 +219,9 @@ export function LanyardBadge({
     const canvasRefValue = canvasRef.current;
     const assemblyRefValue = assemblyRef.current;
     const spinRefValue = spinRef.current;
+    const clipRefValue = clipRef.current;
     const cardRefValue = cardRef.current;
-    if (!rootRefValue || !canvasRefValue || !assemblyRefValue || !spinRefValue || !cardRefValue) {
+    if (!rootRefValue || !canvasRefValue || !assemblyRefValue || !spinRefValue || !clipRefValue || !cardRefValue) {
       console.error("Unable to initialize the lanyard badge canvas.");
       return;
     }
@@ -312,6 +314,7 @@ export function LanyardBadge({
 
     const build = () => {
       dpr = Math.min(window.devicePixelRatio || 1, 2);
+      root.style.setProperty("--lanyard-mobile-height", `${Math.max(560, Math.ceil(cw * 2.12))}px`);
       currentWidth = Math.max(1, root.clientWidth);
       currentHeight = Math.max(1, root.clientHeight);
       cardHeight = Math.round(cw * 1.5);
@@ -320,6 +323,7 @@ export function LanyardBadge({
       const armLength = ringRadius * 2 + clipHeight + cardHeight * 0.55;
       root.style.setProperty("--lanyard-card-width", `${cw}px`);
       root.style.setProperty("--lanyard-card-height", `${cardHeight}px`);
+      root.style.setProperty("--lanyard-card-radius", `${cw * 0.075}px`);
       root.style.setProperty("--lanyard-ring-radius", `${ringRadius}px`);
       root.style.setProperty("--lanyard-clip-height", `${clipHeight}px`);
       root.style.setProperty("--lanyard-clip-width", `${cw * 0.075}px`);
@@ -561,6 +565,7 @@ export function LanyardBadge({
     };
     const onPointerDown = (event: PointerEvent) => {
       if (!initialized || (event.pointerType === "mouse" && event.button !== 0)) return;
+      if (!(event.currentTarget instanceof HTMLElement)) return;
       const point = pointerPosition(event);
       const target = particles[topIndex];
       drag = {
@@ -574,8 +579,8 @@ export function LanyardBadge({
         moved: false,
       };
       target.w = 0;
-      card.setPointerCapture(event.pointerId);
-      card.style.cursor = "grabbing";
+      event.currentTarget.setPointerCapture(event.pointerId);
+      root.dataset.dragging = "true";
       requestMotion();
     };
     const releasePointer = (event: PointerEvent, shouldFlip: boolean) => {
@@ -583,8 +588,10 @@ export function LanyardBadge({
       const wasTap = !drag.moved;
       drag = null;
       particles[topIndex].w = 0.8;
-      card.style.cursor = "grab";
-      if (card.hasPointerCapture(event.pointerId)) card.releasePointerCapture(event.pointerId);
+      delete root.dataset.dragging;
+      if (event.currentTarget instanceof HTMLElement && event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
       if (shouldFlip && wasTap) flip();
       else requestMotion();
     };
@@ -651,11 +658,11 @@ export function LanyardBadge({
       }
     });
     resizeObserver.observe(root);
-    card.addEventListener("pointerdown", onPointerDown);
-    card.addEventListener("pointermove", onPointerMove);
-    card.addEventListener("pointerup", onPointerUp);
-    card.addEventListener("pointercancel", onPointerCancel);
-    card.addEventListener("lostpointercapture", onLostPointerCapture);
+    assembly.addEventListener("pointerdown", onPointerDown);
+    assembly.addEventListener("pointermove", onPointerMove);
+    assembly.addEventListener("pointerup", onPointerUp);
+    assembly.addEventListener("pointercancel", onPointerCancel);
+    assembly.addEventListener("lostpointercapture", onLostPointerCapture);
     document.addEventListener("visibilitychange", onVisibilityChange);
     reducedMotionQuery.addEventListener("change", onMotionChange);
 
@@ -679,14 +686,14 @@ export function LanyardBadge({
     return () => {
       alive = false;
       stopLoop();
-      if (drag && card.hasPointerCapture(drag.id)) card.releasePointerCapture(drag.id);
+      if (drag && assembly.hasPointerCapture(drag.id)) assembly.releasePointerCapture(drag.id);
       intersectionObserver?.disconnect();
       resizeObserver.disconnect();
-      card.removeEventListener("pointerdown", onPointerDown);
-      card.removeEventListener("pointermove", onPointerMove);
-      card.removeEventListener("pointerup", onPointerUp);
-      card.removeEventListener("pointercancel", onPointerCancel);
-      card.removeEventListener("lostpointercapture", onLostPointerCapture);
+      assembly.removeEventListener("pointerdown", onPointerDown);
+      assembly.removeEventListener("pointermove", onPointerMove);
+      assembly.removeEventListener("pointerup", onPointerUp);
+      assembly.removeEventListener("pointercancel", onPointerCancel);
+      assembly.removeEventListener("lostpointercapture", onLostPointerCapture);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       reducedMotionQuery.removeEventListener("change", onMotionChange);
       flipRef.current = () => {};
@@ -694,6 +701,8 @@ export function LanyardBadge({
       root.style.removeProperty("--lanyard-card-ink");
       root.style.removeProperty("--lanyard-card-width");
       root.style.removeProperty("--lanyard-card-height");
+      root.style.removeProperty("--lanyard-card-radius");
+      root.style.removeProperty("--lanyard-mobile-height");
       root.style.removeProperty("--lanyard-ring-radius");
       root.style.removeProperty("--lanyard-clip-height");
       root.style.removeProperty("--lanyard-clip-width");
@@ -722,6 +731,7 @@ export function LanyardBadge({
           .lanyard-badge::before { position: absolute; top: 0; left: 50%; width: 14px; height: 20%; background: var(--deep); content: ""; transform: translateX(-50%); }
           .lanyard-badge .lanyard-assembly { left: 50%; top: 20%; transform: translateX(-50%) !important; visibility: visible !important; }
           .lanyard-badge .lanyard-card-spin { transform: none !important; }
+          .lanyard-badge .lanyard-clip { visibility: visible !important; }
           .lanyard-badge .lanyard-card-hit { visibility: visible !important; }
           .lanyard-badge .lanyard-face-front { visibility: visible !important; }
           .lanyard-badge .lanyard-face-back { visibility: hidden !important; }
@@ -731,6 +741,7 @@ export function LanyardBadge({
       <canvas ref={canvasRef} className="lanyard-canvas" aria-hidden="true" />
       <div ref={assemblyRef} className="lanyard-assembly">
         <div
+          ref={clipRef}
           className="lanyard-clip"
           aria-hidden="true"
           style={{ background: `linear-gradient(90deg, ${MATERIALS.silverLight}, ${MATERIALS.silverMid} 50%, ${MATERIALS.silverEdge})` }}
@@ -744,14 +755,15 @@ export function LanyardBadge({
             aria-label={ariaLabel}
             aria-pressed={showBack}
             onKeyDown={handleKeyDown}
+            onDragStart={(event) => event.preventDefault()}
           >
             <BadgeFaces
               cardWidth={cw}
               name={data.name}
               role={data.role}
-              skills={data.skills}
-              location={data.location}
-              status={data.status}
+              summary={data.summary}
+              fields={data.fields}
+              stack={data.stack}
               photo={photo}
             />
             <div className="lanyard-card-sheen" aria-hidden="true" />
