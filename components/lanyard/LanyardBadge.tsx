@@ -327,7 +327,7 @@ export function LanyardBadge({
       root.style.setProperty("--lanyard-clip-radius", `${cw * 0.02}px`);
       root.style.setProperty("--lanyard-card-top", `${ringRadius + clipHeight * 0.6}px`);
       const strandSegments = 14;
-      canvas.width = Math.round(currentWidth * dpr);
+      canvas.width = Math.round(currentWidth * 2 * dpr);
       canvas.height = Math.round(currentHeight * dpr);
       particles = [];
       links = [];
@@ -424,7 +424,7 @@ export function LanyardBadge({
           ny,
           tx * stretch,
           ty * stretch,
-          start.x * dpr - (nx * texture.width) / 2 - tx * stretch * sourceY,
+          (start.x + currentWidth) * dpr - (nx * texture.width) / 2 - tx * stretch * sourceY,
           start.y * dpr - (ny * texture.width) / 2 - ty * stretch * sourceY,
         );
         const sliceHeight = Math.min(sourceHeight + 1.5, texture.height - sourceY);
@@ -459,7 +459,7 @@ export function LanyardBadge({
       const top = particles[topIndex];
       const angle = Math.atan2(top.x - buckle.x, top.y - buckle.y);
       const unit = Math.max(14, Math.round(cw * 0.1)) / 20;
-      ctx.setTransform(dpr, 0, 0, dpr, buckle.x * dpr, buckle.y * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, (buckle.x + currentWidth) * dpr, buckle.y * dpr);
       ctx.rotate(-angle);
       ctx.shadowColor = "rgba(0,0,0,0.3)";
       ctx.shadowBlur = 6 * dpr;
@@ -480,7 +480,7 @@ export function LanyardBadge({
       ctx.lineTo(13 * unit, -12.5 * unit);
       ctx.stroke();
 
-      ctx.setTransform(dpr, 0, 0, dpr, top.x * dpr, (top.y + ringRadius * 0.8) * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, (top.x + currentWidth) * dpr, (top.y + ringRadius * 0.8) * dpr);
       ctx.lineWidth = Math.max(2.5, ringRadius * 0.38);
       ctx.strokeStyle = metal(-ringRadius, -ringRadius, ringRadius, ringRadius);
       ctx.beginPath();
