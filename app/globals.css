@@ -405,6 +405,7 @@ img { display: block; max-width: 100%; }
   .projects-toolbar { align-items: flex-start; flex-direction: column; }
   .screenshot-grid { grid-template-columns: 1fr; }
   .project-detail-header { padding-top: .5rem; }
+  .footer-back-top {background: var(--text); color: var(--deep);}
 }
 @media (max-width: 767.98px) {
   .nav-entrance { height: 84px; }

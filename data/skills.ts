@@ -45,7 +45,6 @@ export const skills: readonly Skill[] = [
   { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4", row: 1 },
   { name: "shadcn/ui", icon: SiShadcnui, color: null, row: 1 },
   { name: "DaisyUI", icon: SiDaisyui, color: "#1AD1A5", row: 1 },
-  // { name: "Flowbite", icon: FlowbiteMark, color: "#1C64F2", colorOnDark: "#4F87F5", row: 1 },
   { name: "Material UI", icon: SiMui, color: "#007FFF", colorOnDark: "#1589FF", row: 1 },
   { name: "Bootstrap", icon: SiBootstrap, color: "#7952B3", colorOnDark: "#9A7CC6", row: 1 },
   { name: "Node.js", icon: SiNodedotjs, color: "#5FA04E", row: 2 },
@@ -57,7 +56,4 @@ export const skills: readonly Skill[] = [
   { name: "Axios", icon: SiAxios, color: "#5A29E4", colorOnDark: "#9575EE", row: 2 },
   { name: "Git", icon: SiGit, color: "#F05032", colorOnDark: "#F05538", row: 2 },
   { name: "GitHub", icon: SiGithub, color: null, row: 2 },
-  // { name: "npm", icon: SiNpm, color: "#CB3837", colorOnDark: "#D76867", row: 2 },
-  // { name: "Vite", icon: SiVite, color: "#646CFF", colorOnDark: "#757CFF", row: 2 },
-  // { name: "VS Code", icon: VscVscode, color: "#007ACC", colorOnDark: "#008EED", row: 2 },
 ];
