@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { FiGithub, FiLinkedin } from "react-icons/fi";
 import { site } from "@/data/site";
-import { PictureSlot } from "@/components/ui/PictureSlot";
 import { Button } from "@/components/ui/Button";
 import { Reveal } from "@/components/ui/Reveal";
 import { HeroRole } from "@/components/landing/HeroRole";
+import { LanyardBadge } from "@/components/lanyard/LanyardBadge";
 
 export function Hero() {
   return (
@@ -31,13 +31,19 @@ export function Hero() {
             </div>
           </Reveal>
         </div>
-        <Reveal from="right" delay={250}>
-          <PictureSlot src={site.heroPicture} className="hero-picture" sizes="(max-width: 640px) 100vw, 45vw" />
-        </Reveal>
+        <div className="hero-badge-space" aria-hidden="true" />
       </div>
+      <Reveal from="right" delay={250}>
+        <LanyardBadge
+          data={site.badge}
+          photo={site.heroPicture}
+          className="hero-badge-frame"
+          cardWidth={220}
+          height="100svh"
+          flipButton={false}
+        />
+      </Reveal>
     </section>
   );
 }
-
-
 
