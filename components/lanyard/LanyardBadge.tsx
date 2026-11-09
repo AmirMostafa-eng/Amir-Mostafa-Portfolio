@@ -8,7 +8,7 @@ import type { Link, Pt, Spin } from "./physics";
 
 const MATERIALS = {
   silverLight: "#f4efe4",
-  silverMid: "#b9b0a0",
+  silverMid: "#a8a090",
   silverDark: "#8f8778",
   silverEdge: "#ece6da",
 };
@@ -322,7 +322,10 @@ export function LanyardBadge({
       root.style.setProperty("--lanyard-card-height", `${cardHeight}px`);
       root.style.setProperty("--lanyard-ring-radius", `${ringRadius}px`);
       root.style.setProperty("--lanyard-clip-height", `${clipHeight}px`);
-      root.style.setProperty("--lanyard-card-top", `${ringRadius + clipHeight + cardHeight * 0.05}px`);
+      root.style.setProperty("--lanyard-clip-width", `${cw * 0.075}px`);
+      root.style.setProperty("--lanyard-clip-total", `${clipHeight + cw * 0.05}px`);
+      root.style.setProperty("--lanyard-clip-radius", `${cw * 0.02}px`);
+      root.style.setProperty("--lanyard-card-top", `${ringRadius + clipHeight * 0.6}px`);
       const strandSegments = 14;
       canvas.width = Math.round(currentWidth * dpr);
       canvas.height = Math.round(currentHeight * dpr);
@@ -693,6 +696,9 @@ export function LanyardBadge({
       root.style.removeProperty("--lanyard-card-height");
       root.style.removeProperty("--lanyard-ring-radius");
       root.style.removeProperty("--lanyard-clip-height");
+      root.style.removeProperty("--lanyard-clip-width");
+      root.style.removeProperty("--lanyard-clip-total");
+      root.style.removeProperty("--lanyard-clip-radius");
       root.style.removeProperty("--lanyard-card-top");
       setReady(false);
     };
