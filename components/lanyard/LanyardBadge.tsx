@@ -370,7 +370,7 @@ export function LanyardBadge({
           currentHeight * 0.42,
           currentHeight - (lowerLength + ringRadius * 2 + clipHeight + cardHeight + 28 + cw * 0.55),
         ),
-      );
+      ) + (Number.parseFloat(getComputedStyle(root).getPropertyValue("--hero-lanyard-strap-extension")) || 0);
       const leftAnchor = addPoint(centerX - spread, topY, 0);
       buckleIndex = addPoint(centerX, buckleY, 1.4);
       const left = addStrand(leftAnchor, buckleIndex, strandSegments, 1.03);

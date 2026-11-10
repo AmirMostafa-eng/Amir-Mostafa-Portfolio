@@ -460,7 +460,15 @@ img { display: block; max-width: 100%; }
   .nav-menu-button { display: grid; }
   .nav-menu-panel { display: block; }
   .hero-mobile-cv { display: inline-flex; align-items: center; min-height: 40px; font-size: .9rem; }
-  .hero { min-height: auto; flex-direction: column-reverse; padding-top: 40rem;}
+  .hero {
+    --hero-lanyard-strap-extension: 66px;
+    --hero-lanyard-width: clamp(224px, 58%, 352px);
+    --hero-lanyard-card-offset: clamp(180.992px, 46.864%, 284.416px);
+    --hero-lanyard-root-offset: max(56px, clamp(47.488px, 12.296%, 74.624px));
+    min-height: auto;
+    flex-direction: column-reverse;
+    padding-top: calc(var(--hero-lanyard-width) + var(--hero-lanyard-card-offset) + var(--hero-lanyard-root-offset) + var(--hero-lanyard-strap-extension));
+  }
   .hero-inner { grid-template-columns: 1fr; flex: 0 0 auto; }
   .hero-badge-space { display: none; }
   .hero-badge-frame { position: absolute; top: 0; right: 0; width: 100%; height: var(--lanyard-mobile-height, 560px) !important; }
