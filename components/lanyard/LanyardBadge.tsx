@@ -12,6 +12,10 @@ const MATERIALS = {
   silverDark: "#8f8778",
   silverEdge: "#ece6da",
 };
+const STRAP_SCRIPT_FONT = '"Segoe Script", "Brush Script MT", "Snell Roundhand", cursive';
+const STRAP_WIDTH_RATIO = 0.08;
+
+const strapWidthFor = (cw: number) => Math.max(14, Math.round(cw * STRAP_WIDTH_RATIO));
 
 type BadgeData = {
   name: string;
@@ -114,7 +118,7 @@ function makeStrap(length: number, width: number, dpr: number, options: StrapOpt
     ctx.rect(0, 0, length, width);
     ctx.clip();
     ctx.textBaseline = "middle";
-    const textFont = `500 ${Math.round(width * 0.5)}px ${options.fontFamily}`;
+    const textFont = `400 ${Math.round(width * 0.5)}px ${STRAP_SCRIPT_FONT}`;
     const labelFont = `700 ${Math.round(width * 0.36)}px ${options.fontFamily}`;
     ctx.font = textFont;
     const textWidth = ctx.measureText(options.text).width;
@@ -318,7 +322,7 @@ export function LanyardBadge({
       currentWidth = Math.max(1, root.clientWidth);
       currentHeight = Math.max(1, root.clientHeight);
       cardHeight = Math.round(cw * 1.5);
-      const strapWidth = Math.max(14, Math.round(cw * 0.1));
+      const strapWidth = strapWidthFor(cw);
       const lowerLength = strapWidth * 2.2;
       const armLength = ringRadius * 2 + clipHeight + cardHeight * 0.55;
       root.style.setProperty("--lanyard-card-width", `${cw}px`);
@@ -462,7 +466,7 @@ export function LanyardBadge({
       const buckle = particles[buckleIndex];
       const top = particles[topIndex];
       const angle = Math.atan2(top.x - buckle.x, top.y - buckle.y);
-      const unit = Math.max(14, Math.round(cw * 0.1)) / 20;
+      const unit = strapWidthFor(cw) / 20;
       ctx.setTransform(dpr, 0, 0, dpr, (buckle.x + currentWidth) * dpr, buckle.y * dpr);
       ctx.rotate(-angle);
       ctx.shadowColor = "rgba(0,0,0,0.3)";
