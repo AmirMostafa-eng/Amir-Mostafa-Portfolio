@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { useId } from "react";
 
-const SHOW_BARCODE = true;
 const CARD_VIEW_WIDTH = 240;
 const CARD_VIEW_HEIGHT = 360;
 const BORDER_WIDTH = 10.2;
@@ -70,31 +69,7 @@ function CardBorder() {
   );
 }
 
-function Barcode({ name }: { name: string }) {
-  const bars = Array.from(name).flatMap((character, index) => {
-    const code = character.codePointAt(0) ?? 0;
-    return [
-      { width: 1 + (code % 3), gap: index === 0 ? 0 : 1 },
-      { width: 1 + ((code >> 2) % 3), gap: 1 },
-    ];
-  });
-  let x = 0;
-  const rects = bars.map(({ width, gap }, index) => {
-    x += gap;
-    const rect = <rect key={index} x={x} y="0" width={width} height="18" />;
-    x += width;
-    return rect;
-  });
-
-  return (
-    <div className="lanyard-barcode" aria-hidden="true">
-      <svg viewBox={`0 0 ${x} 18`} preserveAspectRatio="none">{rects}</svg>
-      <span>PORTFOLIO 2026</span>
-    </div>
-  );
-}
-
-export function BadgeFaces({ cardWidth, name, role, summary, fields, stack, photo }: BadgeFacesProps) {
+export function BadgeFaces({ cardWidth, name, role, summary, fields, photo }: BadgeFacesProps) {
   const scale = cardWidth / 240;
   const inset = BORDER_WIDTH * scale;
   const radius = INNER_RADIUS * scale;
@@ -148,14 +123,6 @@ export function BadgeFaces({ cardWidth, name, role, summary, fields, stack, phot
               </div>
             ))}
           </div>
-          <div className="lanyard-back-stack" style={{ maxHeight: 38 * scale }}>
-            {stack.map((technology) => (
-              <span className="lanyard-stack-pill" key={technology} style={{ fontSize: Math.max(9, 9.5 * scale) }}>
-                {technology}
-              </span>
-            ))}
-          </div>
-          {SHOW_BARCODE ? <Barcode name={name} /> : null}
         </div>
       </div>
     </>

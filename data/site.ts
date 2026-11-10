@@ -26,7 +26,7 @@ export const site = {
       { label: "Based in", value: "Egypt" },
       { label: "Education", value: "B.Sc. Computer Science, Zagazig University" },
       { label: "Experience", value: "Freelance frontend developer, ITI intern" },
-      { label: "Status", value: "Open to roles and freelance work" },
+      { label: "Status", value: "Open to work" },
     ],
     stack: ["React", "Next.js", "TypeScript", "Tailwind CSS", "Firebase"],
     strapText: "Amir Mostafa",
