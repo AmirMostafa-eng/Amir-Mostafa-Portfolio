@@ -24,7 +24,7 @@ export const timeline: readonly TimelineEvent[] = [
     id: "military",
     title: "Military service",
     start: "2023-10",
-    end: "2025",
+    end: "2024-12",
     size: "small",
     detail: "Completed military service.",
     show: true,
@@ -42,7 +42,7 @@ export const timeline: readonly TimelineEvent[] = [
   {
     id: "freelance",
     title: "Frontend Developer, Freelancer~",
-    start: "2025",
+    start: "2025-09",
     end: null,
     size: "normal",
     detail:

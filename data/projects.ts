@@ -3,8 +3,6 @@ import type { Project } from "@/types";
 // provider entries using parseVideoUrl:
 // video: parseVideoUrl("https://vimeo.com/123456789/abcdef1234"),
 // video: parseVideoUrl("https://yourname.wistia.com/medias/abc123xyz"),
-// Example image entry (add only when the matching file exists in /public):
-// images: [{ src: "/projects/ibook/01.webp", alt: "IBook catalog with genre and price filters" }],
 export const projects: Project[] = [
   {
     slug: "iBook",
@@ -12,7 +10,7 @@ export const projects: Project[] = [
     summary: "A multilingual book marketplace and community platform for buying, selling, and swapping new and used books.",
     description: "IBook is an ITI graduation project: a multilingual book-commerce platform where readers can browse books using genre, price, condition, and availability filters, then purchase books or request swaps. Sellers can list books and manage their activity, while community features let readers publish and discuss posts. Firebase Authentication and Cloud Firestore support accounts and marketplace data. Paymob handles purchases, with payment confirmation, order records, inventory updates, and seller notifications. The Next.js web app supports English and Arabic, including right-to-left layouts.",
     techs: ["nextjs", "typescript", "tailwindcss", "firebase", "next-intl", "paymob"],
-    cover: "/IBook.png",
+    cover: "/portfolio-covers/IBook.webp",
     links: { repo: "https://github.com/AmirMostafa-eng/bookhaven" , live: "https://bookhaven-topaz.vercel.app" },
     video: null,
     images:[
@@ -46,7 +44,7 @@ export const projects: Project[] = [
     summary: "An admin dashboard for reviewing users, moderating book listings, monitoring transactions, and resolving reports.",
     description: "The IBook admin dashboard brings core marketplace operations into four focused areas: user management with search and role filters; book moderation with title or author search, approval filters, and approve or reject actions; transaction monitoring with transaction summaries and recent activity; and report review with type, status, and reporter filters. Admins can inspect reports and mark them resolved. The dashboard reads and updates marketplace records in Firebase Cloud Firestore.",
     techs: ["react", "firebase", "tailwindcss", "daisyui"],
-    cover: "/IBookDashboard.png",
+    cover: "/portfolio-covers/IBookDashboard.webp",
     links: { repo: "https://github.com/AmirMostafa-eng/admin-dashboard/tree/main/admindash-app" },
     video: null,
     images: [
@@ -67,11 +65,11 @@ export const projects: Project[] = [
   },
   {
     slug: "ge-dashboard",
-    title: "German Education Dashboard",
+    title: "PrufCoach",
     summary: "A React dashboard for a German education app.",
     description: "A management dashboard for a German education application, with sign-in and dedicated areas for users, exams, and banners. The React app uses client-side routing and API-backed data, with query and state tools for coordinating updates and accessible component primitives for the interface.",
     techs: ["react", "javascript", "tailwindcss", "axios", "shadcn", "radix-ui", "lucide-react", "date-fns", "react-hot-toast"],
-    cover: "/PrufCoach.jpeg",
+    cover: "/portfolio-covers/PrufCoach.webp",
     links: { repo: "https://github.com/AmirMostafa-eng/GE_Dashboard" },
     video: null,
     images: [
@@ -96,7 +94,7 @@ export const projects: Project[] = [
     summary: "A crowdfunding platform for raising support for community projects.",
     description: "SupportUnity is a multi-page crowdfunding experience for discovering campaigns and supporting community projects. Visitors can sign up or log in, explore campaigns, create or manage a campaign, and complete a support flow. Bootstrap styles the responsive pages, and JSON Server provides the project data API.",
     techs: ["html", "css", "javascript", "bootstrap", "json-server"],
-    cover: "/Supportunity.jpeg",
+    cover: "/portfolio-covers/Supportunity.webp",
     links: { repo: "https://github.com/AmirMostafa-eng/Crowdfunding-Project-SupportUnity" },
     video: { provider: "vimeo", id: "1240895788", hash: "64598d4d8c" },
     images: [
@@ -125,7 +123,7 @@ export const projects: Project[] = [
     summary: "A blog platform built with React and Material UI.",
     description: "TaleTrail is a social blogging app where readers can browse posts and signed-in users can publish, edit, and manage their stories. Post cards are arranged in a responsive masonry feed with lazy loading, while user and post data is handled through a JSON Server API.",
     techs: ["react", "javascript", "material-ui", "tailwindcss", "react-router", "axios", "json-server"],
-    cover: "/TaleTrail.jpeg",
+    cover: "/portfolio-covers/TaleTrail.jpeg",
     links: { repo: "https://github.com/AmirMostafa-eng/TaleTrail" },
     video: null,
     images: [
