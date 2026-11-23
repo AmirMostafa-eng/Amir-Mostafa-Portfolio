@@ -33,7 +33,8 @@ export function Reveal({ from, delay = 0, trigger = "mount", children }: RevealP
   const [revealed, setRevealed] = useState(false);
   const [instant, setInstant] = useState(false);
   const viewTargetRef = useRef<HTMLElement | null>(null);
-  const child = Children.only(children);
+  const resolvedChildren = Children.toArray(children);
+  const child = resolvedChildren.length === 1 ? resolvedChildren[0] : null;
 
   if (!isValidElement(child)) throw new Error("Reveal requires one element child.");
   const revealableChild = child as ReactElement<RevealableProps>;
