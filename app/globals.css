@@ -300,8 +300,13 @@ img { display: block; max-width: 100%; }
   .skill-marquee-copy[aria-hidden="true"] { display: none; }
 }
 .about-section { background: transparent; }
-.about-grid { display: grid; grid-template-columns: minmax(280px, .8fr) minmax(0, 1fr); align-items: start; gap: clamp(3rem, 8vw, 7rem); }
-.about-picture { align-self: start; aspect-ratio: 4 / 5; width: 100%; max-height: 620px; }
+.about-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start; gap: clamp(2.5rem, 6vw, 5rem); }
+.about-road { min-width: 0; }
+.about-grid .about-eyebrow { margin: 0 0 .5rem; color: var(--muted); font-size: .8rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+.about-currently { margin: 1.75rem 0 1.5rem; padding: 18px 20px; border: 1px solid var(--line); border-left: 3px solid var(--btn); border-radius: 8px; background: var(--card); }
+.about-currently .about-currently-label { margin: 0 0 6px; color: var(--muted); font-size: .75rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
+.about-currently .about-currently-title { margin: 0; color: var(--text); font-family: var(--font-display), sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.25; }
+.about-currently .about-currently-detail { margin: 4px 0 0; color: var(--muted); font-size: .95rem; }
 .about-copy p { max-width: none; color: var(--muted); }
 .about-copy .section-heading { margin-bottom: 1.5rem; }
 .about-timeline { position: relative; container: about-timeline / inline-size; margin-top: 1.5rem; }
@@ -505,9 +510,8 @@ img { display: block; max-width: 100%; }
   .hero-picture { min-height: 0; aspect-ratio: 4 / 5; margin: 0; }
   .section { padding: 4.5rem 0; }
   .section-heading { margin-bottom: 2rem; }
-  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
-  .about-picture { order: 0; max-height: none; }
-  .about-copy { order: 1; }
+  .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+  .about-copy { order: -1; }
   .project-grid { grid-template-columns: 1fr; gap: 2rem; }
   .projects-toolbar { align-items: flex-start; flex-direction: column; }
   .screenshot-grid { grid-template-columns: 1fr; }
