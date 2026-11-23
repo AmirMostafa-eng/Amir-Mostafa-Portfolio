@@ -67,34 +67,36 @@ export function ImageCarousel({ title, images, priority }: ImageCarouselProps) {
 
   return (
     <div className="project-carousel">
-      <div
-        ref={viewerRef}
-        className="project-carousel-viewer"
-        role="region"
-        aria-roledescription="carousel"
-        aria-label={`${title} screenshots`}
-        tabIndex={0}
-        onKeyDown={handleViewerKeyDown}
-      >
-        {images.map((image, index) => (
-          <div
-            className="project-carousel-slide"
-            key={image.src}
-            data-slide-index={index}
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${index + 1} of ${images.length}`}
-          >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1248px) calc(100vw - 48px), 1200px"
-              priority={priority && index === 0}
-              loading={priority && index === 0 ? undefined : "lazy"}
-            />
-          </div>
-        ))}
+      <div className="project-carousel-viewer-shell">
+        <div
+          ref={viewerRef}
+          className="project-carousel-viewer"
+          role="region"
+          aria-roledescription="carousel"
+          aria-label={`${title} screenshots`}
+          tabIndex={0}
+          onKeyDown={handleViewerKeyDown}
+        >
+          {images.map((image, index) => (
+            <div
+              className="project-carousel-slide"
+              key={image.src}
+              data-slide-index={index}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${index + 1} of ${images.length}`}
+            >
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1248px) calc(100vw - 48px), 1200px"
+                priority={priority && index === 0}
+                loading={priority && index === 0 ? undefined : "lazy"}
+              />
+            </div>
+          ))}
+        </div>
         {images.length > 1 ? (
           <>
             <button

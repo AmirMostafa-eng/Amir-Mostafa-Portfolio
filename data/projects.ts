@@ -16,9 +16,9 @@ export const projects: Project[] = [
     links: { repo: "https://github.com/AmirMostafa-eng/bookhaven" , live: "https://bookhaven-topaz.vercel.app" },
     video: null,
     images:[
-      {src:"/ibook/WhatsApp Image 2026-11-22 at 5.04.32 AM1.jpeg" , alt:""},
-      {src:"/ibook/WhatsApp Image 2026-11-22 at 5.04.38 AM.jpeg" , alt:""},
-      {src:"/ibook/WhatsApp Image 2026-11-23 at 2.07.51 AM.jpeg" , alt:""},
+      {src:"/ibook/01.jpeg" , alt:""},
+      {src:"/ibook/02.jpeg" , alt:""},
+      {src:"/ibook/03.jpeg" , alt:""},
     ],
     featured: true,
     year: 2025,
