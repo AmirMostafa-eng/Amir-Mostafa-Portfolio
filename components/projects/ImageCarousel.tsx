@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiX } from "react-icons/fi";
 import type { ProjectImage } from "@/types";
 
 type ImageCarouselProps = {
@@ -14,9 +14,13 @@ type ImageCarouselProps = {
 
 export function ImageCarousel({ title, images, priority }: ImageCarouselProps) {
   const viewerRef = useRef<HTMLDivElement>(null);
+  const lightboxRef = useRef<HTMLDialogElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
   const thumbnailRowRef = useRef<HTMLDivElement>(null);
   const thumbnailRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const scrollThumbnailIntoView = useCallback((index: number) => {
     const row = thumbnailRowRef.current;
@@ -27,12 +31,19 @@ export function ImageCarousel({ title, images, priority }: ImageCarouselProps) {
     row.scrollTo({ left, behavior });
   }, []);
 
-  const scrollToIndex = useCallback((index: number) => {
+  const scrollToIndex = useCallback((index: number, behavior?: ScrollBehavior) => {
     const viewer = viewerRef.current;
     if (!viewer) return;
-    const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth";
-    viewer.scrollTo({ left: index * viewer.clientWidth, behavior });
+    const scrollBehavior = behavior ?? (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth");
+    viewer.scrollTo({ left: index * viewer.clientWidth, behavior: scrollBehavior });
   }, []);
+
+  useEffect(() => {
+    const dialog = lightboxRef.current;
+    if (!lightboxOpen || !dialog || dialog.open) return;
+    dialog.showModal();
+    closeButtonRef.current?.focus();
+  }, [lightboxOpen]);
 
   useEffect(() => {
     const viewer = viewerRef.current;
@@ -65,6 +76,31 @@ export function ImageCarousel({ title, images, priority }: ImageCarouselProps) {
     }
   };
 
+  const showLightboxImage = (index: number) => {
+    setActiveIndex(index);
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const navigateLightbox = (direction: -1 | 1) => {
+    const nextIndex = lightboxIndex + direction;
+    if (nextIndex < 0 || nextIndex >= images.length) return;
+    setLightboxIndex(nextIndex);
+  };
+
+  const handleLightboxKeyDown = (event: KeyboardEvent<HTMLDialogElement>) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      lightboxRef.current?.close();
+    } else if (event.key === "ArrowLeft" && lightboxIndex > 0) {
+      event.preventDefault();
+      navigateLightbox(-1);
+    } else if (event.key === "ArrowRight" && lightboxIndex < images.length - 1) {
+      event.preventDefault();
+      navigateLightbox(1);
+    }
+  };
+
   return (
     <div className="project-carousel">
       <div className="project-carousel-viewer-shell">
@@ -86,14 +122,21 @@ export function ImageCarousel({ title, images, priority }: ImageCarouselProps) {
               aria-roledescription="slide"
               aria-label={`${index + 1} of ${images.length}`}
             >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1248px) calc(100vw - 48px), 1200px"
-                priority={priority && index === 0}
-                loading={priority && index === 0 ? undefined : "lazy"}
-              />
+              <button
+                className="project-carousel-image-button"
+                type="button"
+                aria-label={`Open image ${index + 1} full screen`}
+                onClick={() => showLightboxImage(index)}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="(max-width: 640px) calc(100vw - 32px), (max-width: 1248px) calc(100vw - 48px), 1200px"
+                  priority={priority && index === 0}
+                  loading={priority && index === 0 ? undefined : "lazy"}
+                />
+              </button>
             </div>
           ))}
         </div>
@@ -142,6 +185,81 @@ export function ImageCarousel({ title, images, priority }: ImageCarouselProps) {
             </button>
           ))}
         </div>
+      ) : null}
+      {lightboxOpen ? (
+        <dialog
+          ref={lightboxRef}
+          className="project-image-lightbox"
+          aria-label={`${title} image viewer`}
+          onClose={() => {
+            setActiveIndex(lightboxIndex);
+            scrollToIndex(lightboxIndex, "auto");
+            setLightboxOpen(false);
+          }}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) lightboxRef.current?.close();
+          }}
+          onKeyDown={handleLightboxKeyDown}
+        >
+          <div className="project-image-lightbox-header">
+            <span className="project-image-lightbox-counter" aria-live="polite">
+              {lightboxIndex + 1} / {images.length}
+            </span>
+            <button
+              ref={closeButtonRef}
+              className="project-image-lightbox-close"
+              type="button"
+              aria-label="Close image viewer"
+              onClick={() => lightboxRef.current?.close()}
+            >
+              <FiX aria-hidden="true" />
+            </button>
+          </div>
+          <div className="project-image-lightbox-media">
+            <div
+              className="project-image-lightbox-track"
+              style={{ transform: `translateX(-${lightboxIndex * 100}%)` }}
+            >
+              {images.map((image, index) => (
+                <div
+                  className="project-image-lightbox-slide"
+                  key={image.src}
+                  aria-hidden={index !== lightboxIndex}
+                >
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    fill
+                    sizes="100vw"
+                    loading={index === lightboxIndex ? "eager" : "lazy"}
+                  />
+                </div>
+              ))}
+            </div>
+            {images.length > 1 ? (
+              <>
+                <button
+                  className="project-image-lightbox-arrow project-image-lightbox-arrow--previous"
+                  type="button"
+                  aria-label="Previous image"
+                  disabled={lightboxIndex === 0}
+                  onClick={() => navigateLightbox(-1)}
+                >
+                  <FiChevronLeft aria-hidden="true" />
+                </button>
+                <button
+                  className="project-image-lightbox-arrow project-image-lightbox-arrow--next"
+                  type="button"
+                  aria-label="Next image"
+                  disabled={lightboxIndex === images.length - 1}
+                  onClick={() => navigateLightbox(1)}
+                >
+                  <FiChevronRight aria-hidden="true" />
+                </button>
+              </>
+            ) : null}
+          </div>
+        </dialog>
       ) : null}
     </div>
   );
