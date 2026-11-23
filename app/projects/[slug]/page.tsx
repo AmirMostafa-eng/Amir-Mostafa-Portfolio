@@ -6,7 +6,7 @@ import { FiArrowLeft, FiExternalLink } from "react-icons/fi";
 import { getProjectBySlug, getProjects, getTechBySlug } from "@/lib/projects";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { VideoEmbed } from "@/components/projects/VideoEmbed";
+import { ProjectPreview } from "@/components/projects/ProjectPreview";
 import { TechList } from "@/components/projects/TechList";
 
 type PageProps = { params: Promise<{ slug: string }> };
@@ -51,7 +51,12 @@ export default async function ProjectPage({ params }: PageProps) {
             </div>
           ) : null}
         </header>
-        <VideoEmbed video={project.video} poster={project.poster ?? project.cover} title={project.title} />
+        <ProjectPreview
+          title={project.title}
+          video={project.video}
+          poster={project.poster ?? project.cover}
+          images={project.images}
+        />
 
         <section className="detail-section" aria-labelledby="about-project-title">
           <h2 id="about-project-title">About the project</h2>

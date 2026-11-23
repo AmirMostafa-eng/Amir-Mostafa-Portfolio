@@ -12,6 +12,8 @@ export type ProjectVideo =
   | { provider: "vimeo"; id: string; hash?: string }
   | { provider: "wistia"; id: string };
 
+export type ProjectImage = { src: string; alt: string };
+
 export type Project = {
   slug: string;
   title: string;
@@ -20,6 +22,8 @@ export type Project = {
   techs: string[];
   cover: string;
   poster?: string;
+  // Recommended: at most 8 compressed images per project, each up to about 1600px wide and 200KB.
+  images?: ProjectImage[];
   screenshots?: string[];
   links: { live?: string; repo?: string };
   video: ProjectVideo;

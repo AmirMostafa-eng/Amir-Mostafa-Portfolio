@@ -3,6 +3,8 @@ import type { Project } from "@/types";
 // provider entries using parseVideoUrl:
 // video: parseVideoUrl("https://vimeo.com/123456789/abcdef1234"),
 // video: parseVideoUrl("https://yourname.wistia.com/medias/abc123xyz"),
+// Example image entry (add only when the matching file exists in /public):
+// images: [{ src: "/projects/ibook/01.webp", alt: "IBook catalog with genre and price filters" }],
 export const projects: Project[] = [
   {
     slug: "iBook",
@@ -10,9 +12,14 @@ export const projects: Project[] = [
     summary: "A multilingual book marketplace and community platform for buying, selling, and swapping new and used books.",
     description: "IBook is an ITI graduation project: a multilingual book-commerce platform where readers can browse books using genre, price, condition, and availability filters, then purchase books or request swaps. Sellers can list books and manage their activity, while community features let readers publish and discuss posts. Firebase Authentication and Cloud Firestore support accounts and marketplace data. Paymob handles purchases, with payment confirmation, order records, inventory updates, and seller notifications. The Next.js web app supports English and Arabic, including right-to-left layouts.",
     techs: ["nextjs", "typescript", "tailwindcss", "firebase", "next-intl", "paymob"],
-    cover: "/images/projects/field-notes.svg",
+    cover: "/IBook.png",
     links: { repo: "https://github.com/AmirMostafa-eng/bookhaven" , live: "https://bookhaven-topaz.vercel.app" },
     video: null,
+    images:[
+      {src:"/ibook/WhatsApp Image 2026-11-22 at 5.04.32 AM1.jpeg" , alt:""},
+      {src:"/ibook/WhatsApp Image 2026-11-22 at 5.04.38 AM.jpeg" , alt:""},
+      {src:"/ibook/WhatsApp Image 2026-11-23 at 2.07.51 AM.jpeg" , alt:""},
+    ],
     featured: true,
     year: 2025,
     learned: [
@@ -27,7 +34,7 @@ export const projects: Project[] = [
     summary: "An admin dashboard for reviewing users, moderating book listings, monitoring transactions, and resolving reports.",
     description: "The IBook admin dashboard brings core marketplace operations into four focused areas: user management with search and role filters; book moderation with title or author search, approval filters, and approve or reject actions; transaction monitoring with transaction summaries and recent activity; and report review with type, status, and reporter filters. Admins can inspect reports and mark them resolved. The dashboard reads and updates marketplace records in Firebase Cloud Firestore.",
     techs: ["react", "firebase", "tailwindcss", "daisyui"],
-    cover: "/images/projects/daily-dashboard.svg",
+    cover: "/IBookDashboard.png",
     links: { repo: "https://github.com/AmirMostafa-eng/admin-dashboard/tree/main/admindash-app" },
     video: null,
     featured: true,
