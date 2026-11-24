@@ -87,7 +87,8 @@ export function AboutTimeline() {
       width: root.clientWidth,
       height: root.clientHeight,
       path: buildRoadPath(points, root.clientWidth, ROW_HEIGHT),
-      endY: points.length > 0 ? points[points.length - 1].y : 0,
+      // Cut the road just past the current dot's far edge (dot radius 12), keeping the flat open end.
+      endY: points.length > 0 ? points[points.length - 1].y + 14 : 0,
     };
 
     svg.setAttribute("viewBox", `0 0 ${next.width || 1} ${next.height || 1}`);
