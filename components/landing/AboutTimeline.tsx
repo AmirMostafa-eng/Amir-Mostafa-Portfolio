@@ -11,7 +11,7 @@ type Road = { width: number; height: number; path: string; clip: string };
 // How far the road continues past the last dot's center, in px. The dot's outer
 // ring is ~15px, so 20 leaves a short open tail ~5px past the dot. Raise it for
 // a longer tail.
-const ROAD_TAIL_LENGTH = 20;
+const ROAD_TAIL_LENGTH = 16;
 type OpenPanel = { id: string; source: "hover" | "focus" | "click" };
 type PanelPosition = { id: string; left: number; top: number };
 
