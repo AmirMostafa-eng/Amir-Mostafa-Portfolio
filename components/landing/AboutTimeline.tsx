@@ -6,7 +6,7 @@ import { timeline, type TimelineEvent } from "@/data/timeline";
 import { buildRoadPath } from "@/lib/buildTimelineRoad";
 import { ROW_HEIGHT, ZIGZAG_MIN_WIDTH } from "@/lib/timelineLayout";
 
-type Road = { width: number; height: number; path: string };
+type Road = { width: number; height: number; path: string; endY: number };
 type OpenPanel = { id: string; source: "hover" | "focus" | "click" };
 type PanelPosition = { id: string; left: number; top: number };
 
@@ -60,7 +60,7 @@ export function AboutTimeline() {
   const titleRefs = useRef(new Map<string, HTMLButtonElement>());
   const [openPanel, setOpenPanel] = useState<OpenPanel | null>(null);
   const openId = openPanel?.id ?? null;
-  const [road, setRoad] = useState<Road>({ width: 0, height: 0, path: "" });
+  const [road, setRoad] = useState<Road>({ width: 0, height: 0, path: "", endY: 0 });
   const [panelPosition, setPanelPosition] = useState<PanelPosition | null>(null);
 
   const measureRoad = useCallback(() => {
@@ -87,6 +87,7 @@ export function AboutTimeline() {
       width: root.clientWidth,
       height: root.clientHeight,
       path: buildRoadPath(points, root.clientWidth, ROW_HEIGHT),
+      endY: points.length > 0 ? points[points.length - 1].y : 0,
     };
 
     svg.setAttribute("viewBox", `0 0 ${next.width || 1} ${next.height || 1}`);
@@ -97,7 +98,7 @@ export function AboutTimeline() {
     root.dataset.layout = isCompact ? "compact" : "zigzag";
     svg.style.visibility = "visible";
     setRoad((current) =>
-      current.width === next.width && current.height === next.height && current.path === next.path ? current : next,
+      current.width === next.width && current.height === next.height && current.path === next.path && current.endY === next.endY ? current : next,
     );
   }, []);
 
@@ -239,8 +240,13 @@ export function AboutTimeline() {
         viewBox={`0 0 ${road.width || 1} ${road.height || 1}`}
         preserveAspectRatio="none"
       >
-        <path className="timeline-road-bed" d={road.path} ref={bedPathRef} pathLength="1000" />
-        <path className="timeline-road-mid" d={road.path} ref={midPathRef} pathLength="1000" />
+        <defs>
+          <clipPath id="timeline-road-end-clip" clipPathUnits="userSpaceOnUse">
+            <rect x="0" y="0" width={road.width || 1} height={road.endY} />
+          </clipPath>
+        </defs>
+        <path className="timeline-road-bed" d={road.path} ref={bedPathRef} clipPath="url(#timeline-road-end-clip)" />
+        <path className="timeline-road-mid" d={road.path} ref={midPathRef} clipPath="url(#timeline-road-end-clip)" />
         <path d={road.path} ref={pathRef} />
       </svg>
       <ol className="timeline-list" ref={listRef}>
