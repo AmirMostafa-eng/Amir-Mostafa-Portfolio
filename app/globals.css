@@ -373,6 +373,8 @@ img { display: block; max-width: 100%; }
 .tech-badge { display: inline-flex; min-height: 26px; align-items: center; padding: 4px 10px; border: 1px solid var(--line); border-radius: 9999px; background: var(--card); color: var(--text); font-family: var(--font-body), sans-serif; font-size: 13px; font-weight: 500; line-height: 16px; white-space: nowrap; }
 .tech-badge-more { color: var(--muted); }
 .view-all { display: flex; justify-content: center; margin-top: 2.75rem; }
+#projects .view-all .button-secondary { border-color: var(--amber); color: var(--amber); }
+#projects .view-all .button-secondary:hover { background: var(--amber); border-color: var(--amber); color: var(--amber-text); }
 .site-footer { position: relative; display: flex; min-height: clamp(640px, 90svh, 860px); overflow: hidden; box-sizing: border-box; flex-direction: column; padding: clamp(2rem, 5vw, 4rem) 0 1.5rem; border: 0; border-top: 1px solid var(--line); border-radius: 32px 32px 0 0; background: var(--deep); color: var(--text); }
 .footer-container { position: relative; z-index: 1; display: flex; min-height: 100%; flex: 1; flex-direction: column; }
 .footer-main { display: flex; flex: 1; flex-direction: column; align-items: center; justify-content: center; padding: 1rem 0 2rem; text-align: center; }

@@ -13,7 +13,7 @@ export async function FeaturedProjects() {
       <Container>
         <Reveal from="up" trigger="view">
           <div className="featured-projects-heading">
-            <SectionHeading title="Selected projects" description={site.projectsIntro} id="featured-projects-title" />
+            <SectionHeading title={<><span className="hero-name-accent">Selected</span> projects</>} description={site.projectsIntro} id="featured-projects-title" />
           </div>
         </Reveal>
         {projects.length ? (

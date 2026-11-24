@@ -1,4 +1,6 @@
-type SectionHeadingProps = { title: string; description?: string; id?: string };
+import type { ReactNode } from "react";
+
+type SectionHeadingProps = { title: ReactNode; description?: string; id?: string };
 
 export function SectionHeading({ title, description, id }: SectionHeadingProps) {
   return (
