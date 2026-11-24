@@ -43,7 +43,7 @@ export const site = {
   aboutHeadingAccents: ["high", "fly"],
   aboutHeadingAttribution: "- Michael Scott",
   currently: {
-    label: "Currently",
+    label: "Currently Status",
     title: "Let's build something together",
     detail: "Open to frontend roles and freelance work.",
   },
