@@ -328,23 +328,24 @@ img { display: block; max-width: 100%; }
 .about-timeline { position: relative; container: about-timeline / inline-size; margin-top: 1.5rem; }
 .timeline-road { position: absolute; z-index: 0; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; visibility: hidden; }
 .about-timeline[data-road-ready="true"] .timeline-road { visibility: visible; }
-.timeline-road path { fill: none; stroke: var(--road); stroke-width: 3; stroke-linecap: round; }
+.timeline-road path { fill: none; stroke: var(--amber); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 8 10; }
+.timeline-road path.timeline-road-bed { stroke: var(--deep); stroke-width: 30; stroke-dasharray: none; opacity: .7; }
 .timeline-list { position: relative; z-index: 1; margin: 0; padding: 0 0 8px; list-style: none; }
 .timeline-event { position: relative; height: var(--timeline-row-height); --timeline-x: 40%; }
 .timeline-event--right { --timeline-x: 60%; }
 .timeline-event--open { z-index: 3; }
-.timeline-dot { position: absolute; z-index: 2; top: 50%; left: var(--timeline-x); display: grid; width: 18px; height: 18px; place-items: center; padding: 0; transform: translate(-50%, -50%); border: 0; border-radius: 50%; background: var(--btn); cursor: pointer; }
-.timeline-dot--small { width: 10px; height: 10px; background: var(--muted); }
-.timeline-dot--current { border: 2px solid var(--btn); background: var(--deep); }
-.timeline-dot--current::before { position: absolute; inset: -2px; border: 2px solid var(--btn); border-radius: 50%; content: ""; animation: timeline-pulse 2s ease-in-out infinite; }
-.timeline-dot-core { width: 6px; height: 6px; border-radius: 50%; background: var(--btn); }
+.timeline-dot { position: absolute; z-index: 2; top: 50%; left: var(--timeline-x); display: grid; width: 18px; height: 18px; place-items: center; padding: 0; transform: translate(-50%, -50%); border: 0; border-radius: 50%; background: var(--amber); cursor: pointer; }
+.timeline-dot--small { width: 10px; height: 10px; background: var(--amber); opacity: .75; }
+.timeline-dot--current { border: 2px solid var(--amber); background: var(--deep); }
+.timeline-dot--current::before { position: absolute; inset: -2px; border: 2px solid var(--amber); border-radius: 50%; content: ""; animation: timeline-pulse 2s ease-in-out infinite; }
+.timeline-dot-core { width: 6px; height: 6px; border-radius: 50%; background: var(--amber); }
 .timeline-label { position: absolute; top: 50%; width: calc(40% - 40px); transform: translateY(-50%); }
 .timeline-event--left .timeline-label { right: calc(60% + 28px); text-align: right; }
 .timeline-event--right .timeline-label { left: calc(60% + 28px); text-align: left; }
 .timeline-title { min-height: 44px; display: inline-flex; max-width: 100%; align-items: center; justify-content: inherit; padding: .35rem 0; border: 0; background: transparent; color: var(--text); font-family: var(--font-display), sans-serif; font-size: clamp(1rem, 1.8vw, 1.25rem); font-weight: 700; line-height: 1.25; text-align: inherit; cursor: pointer; }
 .timeline-title:hover, .timeline-title:focus-visible, .timeline-event:has(.timeline-dot:hover) .timeline-title { color: var(--link); }
 .timeline-title:focus-visible, .timeline-dot:focus-visible { outline: 2px solid var(--link); outline-offset: 2px; }
-.timeline-period { display: block; color: var(--muted); font-size: .95rem; line-height: 1.4; }
+.timeline-period { display: block; color: var(--amber); font-size: .95rem; line-height: 1.4; }
 .timeline-panel { position: absolute; z-index: 4; width: min(320px, 100cqw); max-width: min(320px, 100cqw); max-height: min(300px, calc(100vh - 24px)); overflow: auto; box-sizing: border-box; padding: 16px; border: 1px solid var(--line); border-radius: 8px; background: var(--deep); color: var(--text); text-align: left; animation: timeline-panel-open 150ms ease both; }
 .timeline-panel[hidden] { display: none; }
 .timeline-panel p { margin: 0; color: var(--text); font-size: 15px; line-height: 1.55; }

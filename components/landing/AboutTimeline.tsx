@@ -53,6 +53,7 @@ export function AboutTimeline() {
   const listRef = useRef<HTMLOListElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const bedPathRef = useRef<SVGPathElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const pointerActivationRef = useRef(false);
   const titleRefs = useRef(new Map<string, HTMLButtonElement>());
@@ -89,6 +90,7 @@ export function AboutTimeline() {
 
     svg.setAttribute("viewBox", `0 0 ${next.width || 1} ${next.height || 1}`);
     pathElement.setAttribute("d", next.path);
+    bedPathRef.current?.setAttribute("d", next.path);
     root.dataset.roadReady = "true";
     root.dataset.layout = isCompact ? "compact" : "zigzag";
     svg.style.visibility = "visible";
@@ -235,6 +237,7 @@ export function AboutTimeline() {
         viewBox={`0 0 ${road.width || 1} ${road.height || 1}`}
         preserveAspectRatio="none"
       >
+        <path className="timeline-road-bed" d={road.path} ref={bedPathRef} />
         <path d={road.path} ref={pathRef} />
       </svg>
       <ol className="timeline-list" ref={listRef}>
