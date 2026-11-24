@@ -319,7 +319,7 @@ img { display: block; max-width: 100%; }
 .about-grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); align-items: start; gap: clamp(2.5rem, 6vw, 5rem); }
 .about-road { min-width: 0; }
 .about-grid .about-eyebrow { margin: 0 0 .5rem; color: var(--amber); font-size: .8rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
-.about-currently { margin: 1.75rem 0 1.5rem; padding: 18px 20px; border: 1px solid var(--line); border-left: 3px solid var(--amber); border-radius: 8px; background: var(--card); }
+.about-currently { margin: 1.75rem 0 1.5rem; padding: 18px 20px; border: 1px solid color-mix(in srgb, var(--amber) 55%, transparent); border-radius: 8px; background: var(--card); box-shadow: 0 0 32px rgb(237 190 114 / 22%), 0 0 6px rgb(237 190 114 / 30%); }
 .about-currently .about-currently-label { margin: 0 0 6px; color: var(--amber); font-size: .75rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
 .about-currently .about-currently-title { margin: 0; color: var(--text); font-family: var(--font-display), sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.25; }
 .about-currently .about-currently-detail { margin: 4px 0 0; color: var(--muted); font-size: .95rem; }
