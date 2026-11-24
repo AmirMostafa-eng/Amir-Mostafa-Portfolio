@@ -336,6 +336,8 @@ img { display: block; max-width: 100%; }
 .timeline-road path { fill: none; stroke: var(--amber); stroke-width: 2; stroke-dasharray: 8 10; }
 .timeline-road path.timeline-road-bed { stroke: var(--deep); stroke-width: 34; stroke-dasharray: none; }
 .timeline-road path.timeline-road-mid { stroke: #BD5B5F; stroke-width: 30; stroke-dasharray: none; opacity: .5; }
+.timeline-road-cap-bed { fill: var(--deep); }
+.timeline-road-cap-mid { fill: #BD5B5F; opacity: .5; }
 .timeline-list { position: relative; z-index: 1; margin: 0; padding: 0 0 8px; list-style: none; }
 .timeline-event { position: relative; height: var(--timeline-row-height); --timeline-x: 22%; }
 .timeline-event--right { --timeline-x: 75%; }
