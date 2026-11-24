@@ -671,15 +671,21 @@ export function LanyardBadge({
     reducedMotionQuery.addEventListener("change", onMotionChange);
 
     void (async () => {
-      await document.fonts.ready;
-      await Promise.all([
-        document.fonts.load(`500 ${fontSize}px ${displayFont}`),
-        document.fonts.load(`700 ${fontSize}px ${displayFont}`),
-        document.fonts.load(`800 ${fontSize}px ${displayFont}`),
-        document.fonts.load(`400 ${fontSize}px ${bodyFont}`),
-        document.fonts.load(`600 ${fontSize}px ${bodyFont}`),
-        document.fonts.load(`700 ${fontSize}px ${bodyFont}`),
-      ]);
+      try {
+        await document.fonts.ready;
+        await Promise.all([
+          document.fonts.load(`500 ${fontSize}px ${displayFont}`),
+          document.fonts.load(`700 ${fontSize}px ${displayFont}`),
+          document.fonts.load(`800 ${fontSize}px ${displayFont}`),
+          document.fonts.load(`400 ${fontSize}px ${bodyFont}`),
+          document.fonts.load(`600 ${fontSize}px ${bodyFont}`),
+          document.fonts.load(`700 ${fontSize}px ${bodyFont}`),
+        ]);
+      } catch {
+        // Font loading can fail on devices missing a fallback face (e.g. the
+        // auto-generated local("Arial") faces on phones without Arial). The
+        // badge must still render; canvas strap text falls back gracefully.
+      }
       if (!alive) return;
       initialized = true;
       build();
