@@ -38,7 +38,7 @@ function eventPeriod(event: TimelineEvent) {
   return (
     <span className="timeline-period">
       <time dateTime={event.start}>{formatDate(event.start)}</time>
-      <span aria-hidden="true"> – </span>
+      <span aria-hidden="true"> &rarr; </span>
       {event.end ? <time dateTime={event.end}>{formatDate(event.end)}</time> : <span>Present</span>}
     </span>
   );
@@ -53,6 +53,8 @@ export function AboutTimeline() {
   const listRef = useRef<HTMLOListElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const pathRef = useRef<SVGPathElement>(null);
+  const bedPathRef = useRef<SVGPathElement>(null);
+  const midPathRef = useRef<SVGPathElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const pointerActivationRef = useRef(false);
   const titleRefs = useRef(new Map<string, HTMLButtonElement>());
@@ -89,6 +91,8 @@ export function AboutTimeline() {
 
     svg.setAttribute("viewBox", `0 0 ${next.width || 1} ${next.height || 1}`);
     pathElement.setAttribute("d", next.path);
+    bedPathRef.current?.setAttribute("d", next.path);
+    midPathRef.current?.setAttribute("d", next.path);
     root.dataset.roadReady = "true";
     root.dataset.layout = isCompact ? "compact" : "zigzag";
     svg.style.visibility = "visible";
@@ -235,6 +239,8 @@ export function AboutTimeline() {
         viewBox={`0 0 ${road.width || 1} ${road.height || 1}`}
         preserveAspectRatio="none"
       >
+        <path className="timeline-road-bed" d={road.path} ref={bedPathRef} />
+        <path className="timeline-road-mid" d={road.path} ref={midPathRef} />
         <path d={road.path} ref={pathRef} />
       </svg>
       <ol className="timeline-list" ref={listRef}>
@@ -260,6 +266,7 @@ export function AboutTimeline() {
                 {event.end === null && <span className="timeline-dot-core" aria-hidden="true" />}
               </span>
               <div className="timeline-label">
+                {eventPeriod(event)}
                 <button
                   aria-expanded={isOpen}
                   aria-controls={panelId}
@@ -282,7 +289,6 @@ export function AboutTimeline() {
                 >
                   {event.title}
                 </button>
-                {eventPeriod(event)}
                 <div
                   className="timeline-panel"
                   hidden={!isOpen}
