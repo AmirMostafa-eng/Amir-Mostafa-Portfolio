@@ -37,4 +37,13 @@ export const site = {
   skillsIntro: "A small toolkit for building thoughtful digital experiences.",
   projectsIntro: "A few selected pieces of work and practice.",
   aboutTitle: "About me",
+  aboutEyebrow: "A little about me",
+  roadEyebrow: "The road so far",
+  aboutHeading: "A path built one step at a time.",
+  currently: {
+    label: "Currently",
+    title: "Open to my next frontend role",
+    detail: "Junior roles and freelance projects",
+  },
+  quickFacts: ["React & Next.js", "TypeScript", "CS graduate"],
 } as const;
