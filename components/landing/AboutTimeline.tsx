@@ -257,13 +257,13 @@ export function AboutTimeline() {
             <li className={`timeline-event timeline-event--${side}${isOpen ? " timeline-event--open" : ""}`} key={event.id}>
               <span
                 aria-hidden="true"
-                className={`timeline-dot${event.size === "small" ? " timeline-dot--small" : ""}${event.end === null ? " timeline-dot--current" : ""}`}
+                className={`timeline-dot${event.size === "small" ? " timeline-dot--small" : ""}${index === visibleEvents.length - 1 && event.end === null ? " timeline-dot--current" : ""}`}
                 data-timeline-trigger={event.id}
                 onClick={() => toggle(event.id)}
                 onPointerEnter={(pointerEvent) => openOnMouseEnter(event.id, pointerEvent)}
                 onPointerLeave={(pointerEvent) => closeOnMouseLeave(event.id, pointerEvent)}
               >
-                {event.end === null && <span className="timeline-dot-core" aria-hidden="true" />}
+                {index === visibleEvents.length - 1 && event.end === null && <span className="timeline-dot-core" aria-hidden="true" />}
               </span>
               <div className="timeline-label">
                 {eventPeriod(event)}
