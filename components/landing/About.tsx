@@ -2,7 +2,12 @@ import { site } from "@/data/site";
 import { Container } from "@/components/ui/Container";
 import { AboutTimeline } from "@/components/landing/AboutTimeline";
 
-const headingParts = site.aboutHeading.split(site.aboutHeadingAccent);
+const escapeRegExp = (value: string) => value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+const accentWords: readonly string[] = site.aboutHeadingAccents;
+const accentSet = new Set(accentWords);
+const headingParts = accentWords.length
+  ? site.aboutHeading.split(new RegExp(`\\b(${accentWords.map(escapeRegExp).join("|")})\\b`))
+  : [site.aboutHeading];
 
 export function About() {
   return (
@@ -17,14 +22,14 @@ export function About() {
             <p className="about-eyebrow">{site.aboutEyebrow}</p>
             <div className="section-heading">
               <h2 id="about-title">
-                {headingParts.length === 2 ? (
-                  <>
-                    {headingParts[0]}
-                    <span className="hero-name-accent">{site.aboutHeadingAccent}</span>
-                    {headingParts[1]}
-                  </>
-                ) : (
-                  site.aboutHeading
+                {headingParts.map((part, index) =>
+                  accentSet.has(part) ? (
+                    <span className="hero-name-accent" key={index}>
+                      {part}
+                    </span>
+                  ) : (
+                    part
+                  ),
                 )}
               </h2>
               <p className="about-heading-attribution">{site.aboutHeadingAttribution}</p>

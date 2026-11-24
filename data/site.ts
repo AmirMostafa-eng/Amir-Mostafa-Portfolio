@@ -40,7 +40,7 @@ export const site = {
   aboutEyebrow: "A little about me",
   roadEyebrow: "The road so far",
   aboutHeading: "You have no idea how high I can fly",
-  aboutHeadingAccent: "fly",
+  aboutHeadingAccents: ["high", "fly"],
   aboutHeadingAttribution: "- Michael Scott",
   currently: {
     label: "Currently",
