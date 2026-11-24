@@ -17,11 +17,11 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
     <main className="page-main pb-28">
       <Container>
         <header className="page-header">
-          <h1 className="page-title">Projects</h1>
+          <h1 className="page-title"><span className="hero-name-accent">Projects</span></h1>
           <p>A selection of work, experiments, and things I’ve enjoyed making.</p>
         </header>
         <div className="projects-toolbar">
-          <p>{projects.length} projects</p>
+          <p><span className="hero-name-accent">{projects.length}</span> projects</p>
           <ViewToggle view={view} />
         </div>
         <ProjectListing projects={projects} techs={techs} view={view} />
