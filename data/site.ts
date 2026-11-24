@@ -33,7 +33,7 @@ export const site = {
   heroPicture: "/11111.png" as string | null,
   aboutPicture: "/images/Developer Avatar Coding in Chair.png" as string | null,
   greeting: "Hello, I'm",
-  about: "Frontend developer from Egypt building fast, responsive web apps with React, Next.js and TypeScript, and always learning something new.",
+  about: "I'm Amir, a frontend developer from Egypt. I build responsive web apps with React, Next.js and TypeScript, and keep learning as I go.",
   skillsIntro: "A small toolkit for building thoughtful digital experiences.",
   projectsIntro: "A few selected pieces of work and practice.",
   aboutTitle: "About me",
