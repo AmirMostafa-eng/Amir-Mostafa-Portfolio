@@ -6,7 +6,12 @@ import { timeline, type TimelineEvent } from "@/data/timeline";
 import { buildRoadPath } from "@/lib/buildTimelineRoad";
 import { ROW_HEIGHT, ZIGZAG_MIN_WIDTH } from "@/lib/timelineLayout";
 
-type Road = { width: number; height: number; path: string; endY: number };
+type Road = { width: number; height: number; path: string; clip: string };
+
+// How far the road continues past the last dot's center, in px. The dot's outer
+// ring is ~15px, so 20 leaves a short open tail ~5px past the dot. Raise it for
+// a longer tail.
+const ROAD_TAIL_LENGTH = 20;
 type OpenPanel = { id: string; source: "hover" | "focus" | "click" };
 type PanelPosition = { id: string; left: number; top: number };
 
@@ -60,7 +65,7 @@ export function AboutTimeline() {
   const titleRefs = useRef(new Map<string, HTMLButtonElement>());
   const [openPanel, setOpenPanel] = useState<OpenPanel | null>(null);
   const openId = openPanel?.id ?? null;
-  const [road, setRoad] = useState<Road>({ width: 0, height: 0, path: "", endY: 0 });
+  const [road, setRoad] = useState<Road>({ width: 0, height: 0, path: "", clip: "" });
   const [panelPosition, setPanelPosition] = useState<PanelPosition | null>(null);
 
   const measureRoad = useCallback(() => {
@@ -83,11 +88,37 @@ export function AboutTimeline() {
     const points = isCompact && measuredPoints.length > 0
       ? measuredPoints.map((point) => ({ ...point, x: measuredPoints[0].x }))
       : measuredPoints;
+    const basePath = buildRoadPath(points, root.clientWidth, ROW_HEIGHT);
+    let path = basePath;
+    let clip = "";
+    if (points.length > 0) {
+      pathElement.setAttribute("d", basePath);
+      const totalLength = pathElement.getTotalLength();
+      const tip = pathElement.getPointAtLength(totalLength);
+      const beforeTip = pathElement.getPointAtLength(Math.max(0, totalLength - 6));
+      const tangentLength = Math.hypot(tip.x - beforeTip.x, tip.y - beforeTip.y) || 1;
+      const tx = (tip.x - beforeTip.x) / tangentLength;
+      const ty = (tip.y - beforeTip.y) / tangentLength;
+      // Open tail: keep the road running straight past the last dot, then cut it
+      // flat and perpendicular to the road so the border and surface end together.
+      const tailEndX = tip.x + tx * ROAD_TAIL_LENGTH;
+      const tailEndY = tip.y + ty * ROAD_TAIL_LENGTH;
+      path = `${basePath} L ${tailEndX.toFixed(2)} ${tailEndY.toFixed(2)}`;
+      const nx = -ty;
+      const ny = tx;
+      clip = [
+        `M ${(tailEndX - nx * 1200).toFixed(2)} ${(tailEndY - ny * 1200).toFixed(2)}`,
+        `L ${(tailEndX + nx * 1200).toFixed(2)} ${(tailEndY + ny * 1200).toFixed(2)}`,
+        `L ${(tailEndX + nx * 1200 - tx * 3000).toFixed(2)} ${(tailEndY + ny * 1200 - ty * 3000).toFixed(2)}`,
+        `L ${(tailEndX - nx * 1200 - tx * 3000).toFixed(2)} ${(tailEndY - ny * 1200 - ty * 3000).toFixed(2)}`,
+        "Z",
+      ].join(" ");
+    }
     const next = {
       width: root.clientWidth,
       height: root.clientHeight,
-      path: buildRoadPath(points, root.clientWidth, ROW_HEIGHT),
-      endY: points.length > 0 ? points[points.length - 1].y : 0,
+      path,
+      clip,
     };
 
     svg.setAttribute("viewBox", `0 0 ${next.width || 1} ${next.height || 1}`);
@@ -98,7 +129,7 @@ export function AboutTimeline() {
     root.dataset.layout = isCompact ? "compact" : "zigzag";
     svg.style.visibility = "visible";
     setRoad((current) =>
-      current.width === next.width && current.height === next.height && current.path === next.path && current.endY === next.endY ? current : next,
+      current.width === next.width && current.height === next.height && current.path === next.path && current.clip === next.clip ? current : next,
     );
   }, []);
 
@@ -242,7 +273,7 @@ export function AboutTimeline() {
       >
         <defs>
           <clipPath id="timeline-road-end-clip" clipPathUnits="userSpaceOnUse">
-            <rect x="0" y="0" width={road.width || 1} height={road.endY} />
+            <path d={road.clip || "M 0 0"} />
           </clipPath>
         </defs>
         <path className="timeline-road-bed" d={road.path} ref={bedPathRef} clipPath="url(#timeline-road-end-clip)" />
