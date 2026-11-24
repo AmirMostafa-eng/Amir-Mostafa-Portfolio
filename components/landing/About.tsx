@@ -27,6 +27,7 @@ export function About() {
                   site.aboutHeading
                 )}
               </h2>
+              <p className="about-heading-attribution">{site.aboutHeadingAttribution}</p>
             </div>
             <p className="about-bio">{site.about}</p>
             <div className="about-currently">

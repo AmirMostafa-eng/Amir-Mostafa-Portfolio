@@ -39,8 +39,9 @@ export const site = {
   aboutTitle: "About me",
   aboutEyebrow: "A little about me",
   roadEyebrow: "The road so far",
-  aboutHeading: "A path built one step at a time.",
-  aboutHeadingAccent: "step",
+  aboutHeading: "You have no idea how high I can fly",
+  aboutHeadingAccent: "fly",
+  aboutHeadingAttribution: "- Michael Scott",
   currently: {
     label: "Currently",
     title: "Let's build something together",
