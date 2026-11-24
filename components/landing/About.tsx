@@ -1,7 +1,8 @@
 import { site } from "@/data/site";
-import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Container } from "@/components/ui/Container";
 import { AboutTimeline } from "@/components/landing/AboutTimeline";
+
+const headingParts = site.aboutHeading.split(site.aboutHeadingAccent);
 
 export function About() {
   return (
@@ -14,7 +15,19 @@ export function About() {
           </div>
           <div className="about-copy">
             <p className="about-eyebrow">{site.aboutEyebrow}</p>
-            <SectionHeading title={site.aboutHeading} id="about-title" />
+            <div className="section-heading">
+              <h2 id="about-title">
+                {headingParts.length === 2 ? (
+                  <>
+                    {headingParts[0]}
+                    <span className="hero-name-accent">{site.aboutHeadingAccent}</span>
+                    {headingParts[1]}
+                  </>
+                ) : (
+                  site.aboutHeading
+                )}
+              </h2>
+            </div>
             <p className="about-bio">{site.about}</p>
             <div className="about-currently">
               <p className="about-currently-label">{site.currently.label}</p>

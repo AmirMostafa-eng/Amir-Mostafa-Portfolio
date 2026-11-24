@@ -40,6 +40,7 @@ export const site = {
   aboutEyebrow: "A little about me",
   roadEyebrow: "The road so far",
   aboutHeading: "A path built one step at a time.",
+  aboutHeadingAccent: "step",
   currently: {
     label: "Currently",
     title: "Open to my next frontend role",
