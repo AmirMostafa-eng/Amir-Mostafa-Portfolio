@@ -592,3 +592,6 @@ img { display: block; max-width: 100%; }
   .role-shimmer { color: var(--text) !important; background: none !important; -webkit-text-fill-color: currentColor !important; animation: none !important; }
   .timeline-dot--current::before, .timeline-panel { animation: none !important; }
 }
+
+/* Match the bio block to the approved mockup A: 21px, #DFC4BF, airy spacing. */
+.about-copy .about-bio { max-width: 34rem; margin: 1.5rem 0; color: #DFC4BF; font-size: 1.3rem; line-height: 1.65; }
