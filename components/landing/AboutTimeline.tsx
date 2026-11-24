@@ -6,7 +6,7 @@ import { timeline, type TimelineEvent } from "@/data/timeline";
 import { buildRoadPath } from "@/lib/buildTimelineRoad";
 import { ROW_HEIGHT, ZIGZAG_MIN_WIDTH } from "@/lib/timelineLayout";
 
-type Road = { width: number; height: number; path: string; startX: number; startY: number };
+type Road = { width: number; height: number; path: string };
 type OpenPanel = { id: string; source: "hover" | "focus" | "click" };
 type PanelPosition = { id: string; left: number; top: number };
 
@@ -60,7 +60,7 @@ export function AboutTimeline() {
   const titleRefs = useRef(new Map<string, HTMLButtonElement>());
   const [openPanel, setOpenPanel] = useState<OpenPanel | null>(null);
   const openId = openPanel?.id ?? null;
-  const [road, setRoad] = useState<Road>({ width: 0, height: 0, path: "", startX: 0, startY: 0 });
+  const [road, setRoad] = useState<Road>({ width: 0, height: 0, path: "" });
   const [panelPosition, setPanelPosition] = useState<PanelPosition | null>(null);
 
   const measureRoad = useCallback(() => {
@@ -83,13 +83,10 @@ export function AboutTimeline() {
     const points = isCompact && measuredPoints.length > 0
       ? measuredPoints.map((point) => ({ ...point, x: measuredPoints[0].x }))
       : measuredPoints;
-    const firstPoint = points[0] ?? { x: 0, y: 0 };
     const next = {
       width: root.clientWidth,
       height: root.clientHeight,
       path: buildRoadPath(points, root.clientWidth, ROW_HEIGHT),
-      startX: Math.min(root.clientWidth, Math.max(0, firstPoint.x)),
-      startY: firstPoint.y,
     };
 
     svg.setAttribute("viewBox", `0 0 ${next.width || 1} ${next.height || 1}`);
@@ -242,10 +239,8 @@ export function AboutTimeline() {
         viewBox={`0 0 ${road.width || 1} ${road.height || 1}`}
         preserveAspectRatio="none"
       >
-        <path className="timeline-road-bed" d={road.path} ref={bedPathRef} />
-        <path className="timeline-road-mid" d={road.path} ref={midPathRef} />
-        <circle className="timeline-road-cap-bed" cx={road.startX} cy={road.startY} r="17" />
-        <circle className="timeline-road-cap-mid" cx={road.startX} cy={road.startY} r="15" />
+        <path className="timeline-road-bed" d={road.path} ref={bedPathRef} pathLength="1000" />
+        <path className="timeline-road-mid" d={road.path} ref={midPathRef} pathLength="1000" />
         <path d={road.path} ref={pathRef} />
       </svg>
       <ol className="timeline-list" ref={listRef}>
