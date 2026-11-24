@@ -323,6 +323,10 @@ img { display: block; max-width: 100%; }
 .about-currently .about-currently-label { margin: 0 0 6px; color: var(--muted); font-size: .75rem; font-weight: 600; letter-spacing: .22em; text-transform: uppercase; }
 .about-currently .about-currently-title { margin: 0; color: var(--text); font-family: var(--font-display), sans-serif; font-size: 1.3rem; font-weight: 700; letter-spacing: -.02em; line-height: 1.25; }
 .about-currently .about-currently-detail { margin: 4px 0 0; color: var(--muted); font-size: .95rem; }
+/* Lock the right-column typography to the delivered design's rendered weight. */
+.about-copy .section-heading h2 { font-weight: 700; }
+.about-copy .about-bio { font-weight: 500; }
+.about-currently .about-currently-detail { font-weight: 500; }
 .about-copy p { max-width: none; color: var(--muted); }
 .about-copy .section-heading { margin-bottom: 1.5rem; }
 .about-timeline { position: relative; container: about-timeline / inline-size; margin-top: 1.5rem; }
