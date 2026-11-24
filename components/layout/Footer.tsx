@@ -117,7 +117,7 @@ export function Footer() {
         <div className="footer-main">
           
           <Reveal from="up" trigger="view" delay={80}>
-            <h2 className="footer-title">Let’s work together</h2>
+            <h2 className="footer-title">Let’s <span className="hero-name-accent">work together</span></h2>
           </Reveal>
           <Reveal from="up" trigger="view" delay={160}>
             <p className="footer-blurb">{site.footerBlurb}</p>
