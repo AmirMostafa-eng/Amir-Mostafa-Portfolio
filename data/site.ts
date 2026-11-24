@@ -43,7 +43,7 @@ export const site = {
   currently: {
     label: "Currently",
     title: "Let's build something together",
-    detail: "Open to junior frontend roles and freelance work.",
+    detail: "Open to frontend roles and freelance work.",
   },
   quickFacts: ["React & Next.js", "TypeScript", "CS graduate"],
 } as const;
