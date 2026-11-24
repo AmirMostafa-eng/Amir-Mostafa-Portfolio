@@ -7,12 +7,13 @@ import { HeroRole } from "@/components/landing/HeroRole";
 import { LanyardBadge } from "@/components/lanyard/LanyardBadge";
 
 export function Hero() {
+  const [firstName = "", ...restName] = site.name.split(" ");
   return (
     <section className="hero" id="hero" aria-labelledby="hero-title">
       <div className="hero-inner">
         <div className="hero-copy">
           <Reveal from="left" delay={150}><p className="eyebrow">{site.greeting}</p></Reveal>
-          <Reveal from="left" delay={230}><h1 id="hero-title">{site.name}</h1></Reveal>
+          <Reveal from="left" delay={230}><h1 id="hero-title"><span className="hero-name-accent">{firstName}</span> {restName.join(" ")}</h1></Reveal>
           <Reveal from="left" delay={310}>
             <p className="hero-role"><HeroRole roles={site.roles} effect={site.roleEffect} /></p>
           </Reveal>

@@ -15,6 +15,9 @@
   --card: rgb(255 255 255 / 7%);
   --line: rgb(255 255 255 / 16%);
   --deep: #2A050B;
+  --amber: #EDBE72;
+  --amber-hover: #F4D08C;
+  --amber-text: #3A0D14;
   --nav-glass: rgba(42, 5, 11, 0.45);
   --nav-blur: 14px;
   --nav-stroke: rgba(255, 255, 255, 0.14);
@@ -244,7 +247,7 @@ img { display: block; max-width: 100%; }
 .hero h1 { max-width: 8ch; margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(4.5rem, 9.4vw, 8.5rem); font-weight: 700; letter-spacing: -.085em; line-height: .88; }
 .hero-role { min-height: 1.65em; margin: 1.5rem 0 .4rem; color: var(--text); font-size: 1.15rem; font-weight: 600; }
 .hero-role-visible { display: inline-block; white-space: nowrap; }
-.role-caret { display: inline-block; width: 2px; height: .9em; margin-left: .12em; vertical-align: -.05em; background: var(--link); }
+.role-caret { display: inline-block; width: 2px; height: .9em; margin-left: .12em; vertical-align: -.05em; background: var(--amber); }
 .role-typewriter[data-phase="holding"] .role-caret { animation: role-caret-blink 1s steps(1) infinite; animation-play-state: var(--role-play-state, running); }
 .role-typewriter[data-playing="false"] .role-caret { animation-play-state: paused; }
 .role-rotate-slot { position: relative; height: 1.65em; overflow: hidden; vertical-align: top; line-height: 1.45; }
@@ -270,6 +273,19 @@ img { display: block; max-width: 100%; }
 .hero-socials { display: flex; align-items: center; gap: .7rem; margin-top: 1.8rem; color: var(--text); }
 .icon-link { display: inline-flex; width: 40px; height: 40px; align-items: center; justify-content: center; border: 1px solid var(--line); border-radius: 4px; background: var(--card); color: var(--link); text-decoration: none; transition: color 180ms ease, border-color 180ms ease; }
 .icon-link:hover { color: var(--text); border-color: var(--btn); }
+
+/* Amber accent pass: hero + nav CV action */
+.hero-name-accent { color: var(--amber); }
+.hero .button-primary { background: var(--amber); color: var(--amber-text); }
+.hero .button-secondary { border-color: var(--amber); color: var(--amber); }
+.hero .button-secondary:hover { background: var(--amber); border-color: var(--amber); color: var(--amber-text); }
+.hero .icon-link { color: var(--amber); }
+.hero .icon-link:hover { color: var(--amber); border-color: var(--amber); }
+.liquid-nav .nav-cv.button-primary { background: var(--amber); color: var(--amber-text); }
+@media (hover: hover) {
+  .hero .button-primary:hover { background: var(--amber-hover); }
+  .liquid-nav .nav-cv.button-primary:hover { background: var(--amber-hover); }
+}
 .picture-slot { position: relative; background: transparent; overflow: hidden; }
 .hero-picture { min-height: 100%; margin-right: calc((100vw - min(100vw - 3rem, 1200px)) / -2); }
 .hero-picture img, .about-picture img { object-fit: cover; }
