@@ -7,7 +7,7 @@ export function Skills() {
   return (
     <section className="section" id="skills" aria-labelledby="skills-title">
       <Container>
-        <SectionHeading title="Tools I work with" description={site.skillsIntro} id="skills-title" />
+        <SectionHeading title={<><span className="hero-name-accent">Tools</span> I work with</>} description={site.skillsIntro} id="skills-title" />
         <SkillsMarquee />
       </Container>
     </section>
