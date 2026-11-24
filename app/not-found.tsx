@@ -7,7 +7,7 @@ export default function NotFound() {
     <main className="page-main">
       <Container>
         <div className="not-found">
-          <h1>Page not found</h1>
+          <h1>Page <span className="hero-name-accent">not found</span></h1>
           <p>The page you’re looking for may have moved or no longer exists.</p>
           <div className="not-found-links">
             <Button href="/">Back to home</Button>

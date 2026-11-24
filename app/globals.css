@@ -514,6 +514,8 @@ img { display: block; max-width: 100%; }
 .not-found h1 { margin: 0; font-family: var(--font-display), sans-serif; font-size: clamp(3.5rem, 10vw, 7rem); line-height: 1; letter-spacing: -.08em; }
 .not-found p { max-width: 44ch; color: var(--muted); }
 .not-found-links { display: flex; flex-wrap: wrap; gap: .75rem; margin-top: 1rem; }
+.not-found .button-secondary { border-color: var(--amber); color: var(--amber); }
+.not-found .button-secondary:hover { background: var(--amber); border-color: var(--amber); color: var(--amber-text); }
 
 @media (max-width: 900px) {
   .all-project-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
