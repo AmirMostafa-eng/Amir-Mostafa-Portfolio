@@ -42,8 +42,8 @@ export const site = {
   aboutHeading: "A path built one step at a time.",
   currently: {
     label: "Currently",
-    title: "Open to my next frontend role",
-    detail: "Junior roles and freelance projects",
+    title: "Let's build something together",
+    detail: "Open to junior frontend roles and freelance work.",
   },
   quickFacts: ["React & Next.js", "TypeScript", "CS graduate"],
 } as const;
