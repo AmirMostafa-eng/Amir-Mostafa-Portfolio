@@ -535,9 +535,9 @@ img { display: block; max-width: 100%; }
   95% { transform: translate(.05em, -.02em); }
 }
 @keyframes nf404-slice {
-  0%, 90%, 100% { clip-path: inset(0); transform: translate(.04em, .01em); }
-  92% { clip-path: inset(15% 0 60% 0); transform: translate(.09em, 0); }
-  95% { clip-path: inset(65% 0 10% 0); transform: translate(-.07em, .02em); }
+  0%, 90%, 100% { -webkit-clip-path: inset(0); clip-path: inset(0); transform: translate(.04em, .01em); }
+  92% { -webkit-clip-path: inset(15% 0 60% 0); clip-path: inset(15% 0 60% 0); transform: translate(.09em, 0); }
+  95% { -webkit-clip-path: inset(65% 0 10% 0); clip-path: inset(65% 0 10% 0); transform: translate(-.07em, .02em); }
 }
 @media (max-width: 900px) { .nf404-grid { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: reduce) { .nf404-num::before, .nf404-num::after { animation: none; } }
