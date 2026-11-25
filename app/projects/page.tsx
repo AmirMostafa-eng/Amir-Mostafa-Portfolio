@@ -1,3 +1,4 @@
+import { Reveal } from "@/components/ui/Reveal";
 import { Container } from "@/components/ui/Container";
 import { ProjectListing } from "@/components/projects/ProjectListing";
 import { ViewToggle } from "@/components/projects/ViewToggle";
@@ -16,15 +17,23 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Sea
   return (
     <main className="page-main pb-28">
       <Container>
+        <Reveal from="up" delay={100}>
         <header className="page-header">
           <h1 className="page-title"><span className="hero-name-accent">Projects</span></h1>
           <p>A selection of work, experiments, and things I’ve enjoyed making.</p>
         </header>
+        </Reveal>
+        <Reveal from="up" delay={200}>
         <div className="projects-toolbar">
           <p><span className="hero-name-accent">{projects.length}</span> projects</p>
           <ViewToggle view={view} />
         </div>
-        <ProjectListing projects={projects} techs={techs} view={view} />
+        </Reveal>
+        <Reveal from="up" delay={300}>
+        <div>
+          <ProjectListing projects={projects} techs={techs} view={view} />
+        </div>
+        </Reveal>
       </Container>
     </main>
   );

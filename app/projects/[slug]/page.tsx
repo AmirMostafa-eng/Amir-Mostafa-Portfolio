@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { FiArrowLeft, FiExternalLink } from "react-icons/fi";
 import { getProjectBySlug, getProjects, getTechBySlug } from "@/lib/projects";
+import { Reveal } from "@/components/ui/Reveal";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { ProjectPreview } from "@/components/projects/ProjectPreview";
@@ -37,6 +38,7 @@ export default async function ProjectPage({ params }: PageProps) {
   return (
     <main className="page-main project-detail">
       <Container>
+        <Reveal from="up" delay={100}>
         <header className="project-detail-header">
           <div className="project-detail-title">
             <Link className="back-link footer-back-top" href="/projects"><FiArrowLeft aria-hidden="true" title="All projects"/></Link>
@@ -51,25 +53,30 @@ export default async function ProjectPage({ params }: PageProps) {
             </div>
           ) : null}
         </header>
+        </Reveal>
+        <Reveal from="up" delay={220}>
+        <div>
         <ProjectPreview
           title={project.title}
           video={project.video}
           poster={project.poster ?? project.cover}
           images={project.images}
         />
+        </div>
+        </Reveal>
 
-        <section className="detail-section" aria-labelledby="about-project-title">
+        <Reveal from="up" trigger="view"><section className="detail-section" aria-labelledby="about-project-title">
           <h2 id="about-project-title">About the project</h2>
           <div className="detail-prose"><p>{project.description}</p></div>
-        </section>
+        </section></Reveal>
 
-        <section className="detail-section" aria-labelledby="tech-used-title">
+        <Reveal from="up" trigger="view"><section className="detail-section" aria-labelledby="tech-used-title">
           <h2 id="tech-used-title">Tech used</h2>
           <TechList techs={validTechs} label={`${project.title} technologies`} />
-        </section>
+        </section></Reveal>
 
         {project.screenshots?.length ? (
-          <section className="detail-section" aria-labelledby="screenshots-title">
+          <Reveal from="up" trigger="view"><section className="detail-section" aria-labelledby="screenshots-title">
             <h2 id="screenshots-title">Screenshots</h2>
             <div className="screenshot-grid">
               {project.screenshots.map((src, index) => (
@@ -78,14 +85,14 @@ export default async function ProjectPage({ params }: PageProps) {
                 </div>
               ))}
             </div>
-          </section>
+          </section></Reveal>
         ) : null}
 
         {project.learned?.length ? (
-          <section className="detail-section" aria-labelledby="learned-title">
+          <Reveal from="up" trigger="view"><section className="detail-section" aria-labelledby="learned-title">
             <h2 id="learned-title">What I learned</h2>
             <ul className="learned-list">{project.learned.map((item) => <li key={item}>{item}</li>)}</ul>
-          </section>
+          </section></Reveal>
         ) : null}
       </Container>
     </main>
