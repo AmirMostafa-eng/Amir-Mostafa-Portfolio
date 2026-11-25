@@ -41,7 +41,7 @@ export const timeline: readonly TimelineEvent[] = [
   },
   {
     id: "freelance",
-    title: "Frontend Developer, Freelancer~",
+    title: "Frontend Developer, Freelancer",
     start: "2025-09",
     end: null,
     size: "normal",
