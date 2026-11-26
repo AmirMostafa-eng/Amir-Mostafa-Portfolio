@@ -9,7 +9,7 @@ const KV_URL = process.env.KV_REST_API_URL;
 const KV_TOKEN = process.env.KV_REST_API_TOKEN;
 const LOCAL_FILE = path.join(process.cwd(), ".stats-local.json");
 
-export type VisitInput = { id: string; page: string; ref: string; country: string };
+export type VisitInput = { id: string; page: string; ref: string; country: string; newVisit: boolean };
 
 export type DayStat = { date: string; total: number; unique: number };
 
@@ -45,21 +45,26 @@ async function kv<T = unknown>(commands: unknown[][]): Promise<T[]> {
   return json.map((r) => r.result);
 }
 
-async function kvRecord({ id, page, ref, country }: VisitInput): Promise<void> {
+async function kvRecord({ id, page, ref, country, newVisit }: VisitInput): Promise<void> {
   const day = todayKey();
+  // Every beacon counts as a page view; only the first beacon of a session
+  // (or of a brand-new device) counts as a visit.
   const [added] = await kv<number>([
     ["SADD", "visitors:devices", id],
-    ["HINCRBY", `visitors:daily:${day}`, "total", 1],
     ["HINCRBY", "visitors:pages", page, 1],
+  ]);
+  const isNewDevice = added === 1;
+  if (!newVisit && !isNewDevice) return;
+  const cmds: unknown[][] = [
+    ["HINCRBY", `visitors:daily:${day}`, "total", 1],
     ["HINCRBY", "visitors:refs", ref, 1],
     ["HINCRBY", "visitors:countries", country, 1],
     ["HSET", "visitors:meta", "last", new Date().toISOString()],
-  ]);
-  if (added === 1) {
-    await kv([["HINCRBY", `visitors:daily:${day}`, "unique", 1]]);
-  } else {
-    await kv([["HINCRBY", "visitors:meta", "returning", 1]]);
-  }
+    isNewDevice
+      ? ["HINCRBY", `visitors:daily:${day}`, "unique", 1]
+      : ["HINCRBY", "visitors:meta", "returning", 1],
+  ];
+  await kv(cmds);
 }
 
 function hashToPairs(result: unknown): [string, number][] {
@@ -134,22 +139,22 @@ async function readLocal(): Promise<LocalData> {
   }
 }
 
-async function localRecord({ id, page, ref, country }: VisitInput): Promise<void> {
+async function localRecord({ id, page, ref, country, newVisit }: VisitInput): Promise<void> {
   const d = await readLocal();
   const day = todayKey();
   d.daily[day] = d.daily[day] ?? { total: 0, unique: 0 };
-  d.total += 1;
-  d.daily[day].total += 1;
-  if (d.devices.includes(id)) {
-    d.returning += 1;
-  } else {
-    d.devices.push(id);
-    d.daily[day].unique += 1;
-  }
   d.pages[page] = (d.pages[page] ?? 0) + 1;
-  d.refs[ref] = (d.refs[ref] ?? 0) + 1;
-  d.countries[country] = (d.countries[country] ?? 0) + 1;
-  d.last = new Date().toISOString();
+  const isNewDevice = !d.devices.includes(id);
+  if (isNewDevice) d.devices.push(id);
+  if (newVisit || isNewDevice) {
+    d.total += 1;
+    d.daily[day].total += 1;
+    if (isNewDevice) d.daily[day].unique += 1;
+    else d.returning += 1;
+    d.refs[ref] = (d.refs[ref] ?? 0) + 1;
+    d.countries[country] = (d.countries[country] ?? 0) + 1;
+    d.last = new Date().toISOString();
+  }
   await fs.writeFile(LOCAL_FILE, JSON.stringify(d));
 }
 

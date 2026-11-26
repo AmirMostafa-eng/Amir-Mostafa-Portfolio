@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export async function POST(req: NextRequest) {
-  let body: { id?: unknown; page?: unknown; ref?: unknown };
+  let body: { id?: unknown; page?: unknown; ref?: unknown; newVisit?: unknown };
   try {
     body = await req.json();
   } catch {
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   const country = req.headers.get("x-vercel-ip-country") ?? "local";
 
   try {
-    await recordVisit({ id, page, ref, country });
+    await recordVisit({ id, page, ref, country, newVisit: body.newVisit === true });
   } catch {
     return new Response(null, { status: 500 });
   }

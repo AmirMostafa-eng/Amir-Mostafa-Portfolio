@@ -28,9 +28,9 @@ export default async function VaultPage() {
   const maxWeek = Math.max(1, ...s.week.map((d) => d.total));
   const cards: { label: string; value: number; hint: string }[] = [
     { label: "Unique devices", value: s.unique, hint: "distinct browsers that opened the site" },
-    { label: "Total visits", value: s.total, hint: "every page load counted" },
-    { label: "Returning visits", value: s.returning, hint: "visits from devices seen before" },
-    { label: "Today", value: s.today, hint: "page loads since midnight UTC" },
+    { label: "Total visits", value: s.total, hint: "one per browsing session, however many pages" },
+    { label: "Returning visits", value: s.returning, hint: "visits from browsers seen before" },
+    { label: "Today", value: s.today, hint: "visits since midnight UTC" },
   ];
   return (
     <main className="vault">
@@ -51,7 +51,7 @@ export default async function VaultPage() {
         </section>
 
         <section className="vault-panel" aria-label="Last 7 days">
-          <h2 className="vault-panel-title">Last 7 days</h2>
+          <h2 className="vault-panel-title">Visits, last 7 days</h2>
           <div className="vault-chart">
             {s.week.map((d) => (
               <div className="vault-bar-col" key={d.date}>
@@ -66,9 +66,9 @@ export default async function VaultPage() {
         </section>
 
         <div className="vault-lists">
-          <VaultList title="Pages" rows={s.pages} empty="no visits yet" />
-          <VaultList title="Referrers" rows={s.refs} empty="no referrers yet" />
-          <VaultList title="Countries" rows={s.countries} empty="no countries yet" />
+          <VaultList title="Pages viewed" rows={s.pages} empty="no visits yet" />
+          <VaultList title="Referrers (per visit)" rows={s.refs} empty="no referrers yet" />
+          <VaultList title="Countries (per visit)" rows={s.countries} empty="no countries yet" />
         </div>
 
         <p className="vault-foot">
