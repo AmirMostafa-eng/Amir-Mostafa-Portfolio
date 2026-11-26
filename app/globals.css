@@ -662,3 +662,6 @@ img { display: block; max-width: 100%; }
 .vault-empty { margin: 0; color: var(--muted); font-size: 14px; }
 .vault-foot { color: var(--muted); font-size: 14px; }
 .vault-foot code { color: var(--amber); }
+.vault-live { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 14px; padding: 4px 12px; border: 1px solid var(--line); border-radius: 999px; font-size: 12px; color: var(--muted); }
+.vault-live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); animation: vault-pulse 1.6s ease-in-out infinite; }
+@keyframes vault-pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }

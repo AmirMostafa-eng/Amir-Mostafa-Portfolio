@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
+import { LiveRefresh } from "@/components/LiveRefresh";
 import { getStats } from "@/lib/stats";
 
 export const dynamic = "force-dynamic";
@@ -35,6 +36,7 @@ export default async function VaultPage() {
   return (
     <main className="vault">
       <Container className="vault-inner">
+        <LiveRefresh />
         <p className="vault-eyebrow">Private Page</p>
         <h1 className="vault-title">
           Visitor <span className="vault-amber">vault</span>
@@ -72,7 +74,7 @@ export default async function VaultPage() {
         </div>
 
         <p className="vault-foot">
-          Last visit: {fmtTime(s.lastVisit)} - refresh to see new numbers. Raw JSON lives at{" "}
+          Last visit: {fmtTime(s.lastVisit)}. Raw JSON lives at{" "}
           <code>/api/visitors</code>.
         </p>
       </Container>
