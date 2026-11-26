@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 const KEY = "amir_visitor_id";
 
-// Silent beacon: one random device ID in localStorage, one POST per page load.
-// Renders nothing and shows nothing to visitors.
+// Silent beacon: one random device ID in localStorage, one POST per page view,
+// including client-side navigation. Renders nothing and shows nothing.
 export function VisitorTracker() {
+  const pathname = usePathname();
   useEffect(() => {
     try {
       let id = localStorage.getItem(KEY);
@@ -17,12 +19,12 @@ export function VisitorTracker() {
       fetch("/api/visitors", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, page: window.location.pathname, ref: document.referrer }),
+        body: JSON.stringify({ id, page: pathname, ref: document.referrer }),
         keepalive: true,
       }).catch(() => {});
     } catch {
       // Storage blocked or fetch unavailable: skip counting, never break the page.
     }
-  }, []);
+  }, [pathname]);
   return null;
 }
