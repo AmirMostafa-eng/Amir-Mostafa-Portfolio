@@ -49,17 +49,16 @@ async function kvRecord({ id, page, ref, country }: VisitInput): Promise<void> {
   const day = todayKey();
   const [added] = await kv<number>([
     ["SADD", "visitors:devices", id],
-    ["INCR", "visitors:total"],
     ["HINCRBY", `visitors:daily:${day}`, "total", 1],
     ["HINCRBY", "visitors:pages", page, 1],
     ["HINCRBY", "visitors:refs", ref, 1],
     ["HINCRBY", "visitors:countries", country, 1],
-    ["SET", "visitors:last", new Date().toISOString()],
+    ["HSET", "visitors:meta", "last", new Date().toISOString()],
   ]);
   if (added === 1) {
     await kv([["HINCRBY", `visitors:daily:${day}`, "unique", 1]]);
   } else {
-    await kv([["INCR", "visitors:returning"]]);
+    await kv([["HINCRBY", "visitors:meta", "returning", 1]]);
   }
 }
 
@@ -76,31 +75,39 @@ async function kvGetStats(): Promise<Stats> {
   const days: string[] = [];
   for (let i = 6; i >= 0; i--) days.push(todayKey(i));
   const cmds: unknown[][] = [
-    ["GET", "visitors:total"],
     ["SCARD", "visitors:devices"],
-    ["GET", "visitors:returning"],
+    ["HGETALL", "visitors:meta"],
     ["HGETALL", "visitors:pages"],
     ["HGETALL", "visitors:refs"],
     ["HGETALL", "visitors:countries"],
-    ["GET", "visitors:last"],
     ...days.map((d) => ["HGETALL", `visitors:daily:${d}`]),
   ];
   const r = await kv(cmds);
   const week: DayStat[] = days.map((date, i) => {
-    const pairs = hashToPairs(r[7 + i]);
+    const pairs = hashToPairs(r[5 + i]);
     const get = (k: string) => pairs.find(([key]) => key === k)?.[1] ?? 0;
     return { date, total: get("total"), unique: get("unique") };
   });
+  const meta = new Map(hashToPairs(r[1]));
+  // raw hash values are strings; "last" is an ISO timestamp, "returning" a count
+  const metaRaw = r[1];
+  const unique = Number(r[0]) || 0;
+  const returning = meta.get("returning") ?? 0;
+  let lastVisit: string | null = null;
+  if (Array.isArray(metaRaw)) {
+    const idx = metaRaw.indexOf("last");
+    if (idx >= 0 && typeof metaRaw[idx + 1] === "string") lastVisit = metaRaw[idx + 1];
+  }
   return {
-    total: Number(r[0]) || 0,
-    unique: Number(r[1]) || 0,
-    returning: Number(r[2]) || 0,
+    total: unique + returning,
+    unique,
+    returning,
     today: week[6].total,
     week,
-    pages: hashToPairs(r[3]).slice(0, 8),
-    refs: hashToPairs(r[4]).slice(0, 8),
-    countries: hashToPairs(r[5]).slice(0, 8),
-    lastVisit: typeof r[6] === "string" ? (r[6] as string) : null,
+    pages: hashToPairs(r[2]).slice(0, 8),
+    refs: hashToPairs(r[3]).slice(0, 8),
+    countries: hashToPairs(r[4]).slice(0, 8),
+    lastVisit,
   };
 }
 
