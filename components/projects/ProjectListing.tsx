@@ -10,7 +10,7 @@ export function ProjectListing({ projects, techs, view }: ProjectListingProps) {
 
   return (
     <div className={view === "grid" ? "project-grid all-project-grid" : "project-list"}>
-      {projects.map((project) => <ProjectCard key={project.slug} project={project} techs={techs} variant={view} />)}
+      {projects.map((project, index) => <ProjectCard key={project.slug} project={project} techs={techs} variant={view} priority={index === 0} />)}
     </div>
   );
 }
