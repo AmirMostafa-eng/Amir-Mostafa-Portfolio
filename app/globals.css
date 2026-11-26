@@ -180,6 +180,11 @@ img { display: block; max-width: 100%; }
 .reveal[data-revealed="false"][data-reveal-from="up"] { transform: translateY(var(--reveal-distance)); }
 .reveal[data-revealed="true"] { opacity: 1; transform: none; }
 .reveal[data-reveal-instant="true"] { transition: none !important; }
+/* Phones only: hero reveals run as a CSS animation so the headline shows on first paint instead of waiting for JS to hydrate. Same motion and timing. Desktop is unaffected and keeps the JS-driven reveal. */
+@keyframes reveal-in-left { from { opacity: 0; transform: translateX(calc(var(--reveal-distance) * -1)); } to { opacity: 1; transform: none; } }
+@media (max-width: 767px) and (prefers-reduced-motion: no-preference) {
+  .hero .reveal[data-reveal-trigger="mount"][data-reveal-from="left"]:not([data-reveal-instant="true"]) { animation: reveal-in-left var(--reveal-duration) var(--reveal-ease) var(--reveal-delay, 0ms) both; }
+}
 .section[id="projects"] .featured-projects-heading.reveal { --reveal-distance: var(--projects-heading-reveal-distance); }
 .project-card-reveal { display: flex; min-width: 0; --reveal-distance: var(--project-card-reveal-distance); }
 .project-card-reveal > .project-card { width: 100%; }

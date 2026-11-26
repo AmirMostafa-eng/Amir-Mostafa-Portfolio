@@ -20,6 +20,7 @@ type RevealableProps = {
   "data-reveal-from"?: RevealFrom;
   "data-revealed"?: "true" | "false";
   "data-reveal-instant"?: "true" | "false";
+  "data-reveal-trigger"?: RevealTrigger;
 };
 
 const useBrowserLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
@@ -92,6 +93,7 @@ export function Reveal({ from, delay = 0, trigger = "mount", children }: RevealP
     "data-reveal-from": from,
     "data-revealed": revealed ? "true" : "false",
     "data-reveal-instant": instant ? "true" : "false",
+    "data-reveal-trigger": trigger,
   };
 
   if (trigger === "view") revealProps.ref = setViewTarget;
