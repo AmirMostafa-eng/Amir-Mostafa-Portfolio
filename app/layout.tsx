@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bricolage_Grotesque, Instrument_Sans } from "next/font/google";
 import { Footer } from "@/components/layout/Footer";
 import { LiquidNav } from "@/components/nav/LiquidNav";
+import { VisitorTracker } from "@/components/VisitorTracker";
 import { site } from "@/data/site";
 import "./globals.css";
 
@@ -25,6 +26,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <style>{`.nav-entrance { transform: none !important; } .reveal { opacity: 1 !important; transform: none !important; transition: none !important; } .footer-watermark { opacity: 1 !important; transform: translateX(-50%) !important; } .role-caret { display: none !important; }`}</style>
         </noscript>
         <LiquidNav />
+        <VisitorTracker />
         {children}
         <Footer />
       </body>
