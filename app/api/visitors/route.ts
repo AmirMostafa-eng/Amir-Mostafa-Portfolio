@@ -17,8 +17,8 @@ export async function POST(req: NextRequest) {
 
   let page = typeof body.page === "string" ? body.page.split("?")[0] : "/";
   if (!page.startsWith("/") || page.length > 120) page = "/";
-  // Never count the vault itself or API calls.
-  if (page.startsWith("/vault-") || page.startsWith("/api")) {
+  // Never count the stats page itself or API calls.
+  if (page.startsWith("/visitors") || page.startsWith("/api")) {
     return new Response(null, { status: 204 });
   }
 
