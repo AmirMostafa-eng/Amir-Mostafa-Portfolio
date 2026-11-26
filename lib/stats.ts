@@ -40,9 +40,14 @@ async function kv<T = unknown>(commands: unknown[][]): Promise<T[]> {
     body: JSON.stringify(commands),
     cache: "no-store",
   });
-  if (!res.ok) throw new Error(`KV pipeline failed: ${res.status}`);
-  const json = (await res.json()) as { result: T }[];
-  return json.map((r) => r.result);
+  if (!res.ok) {
+    const bodyText = await res.text().catch(() => "");
+    throw new Error(`KV pipeline HTTP ${res.status}: ${bodyText.slice(0, 300)}`);
+  }
+  const json = (await res.json()) as ({ result: T } | { error: string })[];
+  const errors = json.filter((r): r is { error: string } => "error" in r).map((r) => r.error);
+  if (errors.length) throw new Error(`KV command errors: ${errors.join(" | ").slice(0, 300)}`);
+  return (json as { result: T }[]).map((r) => r.result);
 }
 
 async function kvRecord({ id, page, ref, country }: VisitInput): Promise<void> {

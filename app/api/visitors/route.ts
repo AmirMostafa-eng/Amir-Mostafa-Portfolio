@@ -34,12 +34,13 @@ export async function POST(req: NextRequest) {
 
   try {
     await recordVisit({ id, page, ref, country });
-  } catch {
-    return new Response(null, { status: 500 });
+  } catch (e) {
+    return Response.json({ debug: String(e) }, { status: 500 });
   }
   return new Response(null, { status: 204 });
 }
 
 export async function GET() {
-  return Response.json(await getStats());
+  const stats = await getStats();
+  return Response.json({ ...stats, v: "debug1" });
 }
