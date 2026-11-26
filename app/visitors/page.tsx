@@ -35,7 +35,7 @@ export default async function VaultPage() {
   return (
     <main className="vault">
       <Container className="vault-inner">
-        <p className="vault-eyebrow">Private - only you have this link</p>
+        <p className="vault-eyebrow">Private Page</p>
         <h1 className="vault-title">
           Visitor <span className="vault-amber">vault</span>
         </h1>
