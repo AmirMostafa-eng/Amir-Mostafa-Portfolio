@@ -41,6 +41,10 @@ export async function POST(req: NextRequest) {
 }
 
 export async function GET() {
-  const stats = await getStats();
-  return Response.json({ ...stats, v: "debug1" });
+  try {
+    const stats = await getStats();
+    return Response.json({ ...stats, v: "debug1" });
+  } catch (e) {
+    return Response.json({ v: "debug1", debug: String(e) }, { status: 500 });
+  }
 }
